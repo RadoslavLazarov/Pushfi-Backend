@@ -1,0 +1,12 @@
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\bin\Debug\net6.0\Pushfi.Common.deps.json
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\bin\Debug\net6.0\Pushfi.Common.dll
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\bin\Debug\net6.0\ref\Pushfi.Common.dll
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\bin\Debug\net6.0\Pushfi.Common.pdb
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.GeneratedMSBuildEditorConfig.editorconfig
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.AssemblyInfoInputs.cache
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.AssemblyInfo.cs
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.csproj.CoreCompileInputs.cache
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.dll
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\ref\Pushfi.Common.dll
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.pdb
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.csproj.AssemblyReference.cache

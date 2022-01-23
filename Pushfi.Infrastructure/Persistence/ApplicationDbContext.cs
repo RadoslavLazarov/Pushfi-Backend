@@ -57,41 +57,42 @@ namespace Pushfi.Infrastructure.Persistence
 		{
 			var entries = ChangeTracker.Entries();
 			var userClaims = this._accessor?.HttpContext?.User;
-			var currentUserId = userClaims.FindFirstValue(ClaimTypes.NameIdentifier);
-			
-			//var test = Assembly.GetAssembly(typeof(Pushfi.Domain.Common.Interfaces.ITrackableEntity)).GetType("Pushfi.Domain.Common.Interfaces.ITrackableEntity");
-			//var test2 = test.BaseType;
-			
-			if (currentUserId != null)
+
+			if (userClaims != null)
             {
-				foreach (var entry in entries)
+				var currentUserId = userClaims.FindFirstValue(ClaimTypes.NameIdentifier);
+
+				if (currentUserId != null)
 				{
-					if (entry.State != EntityState.Unchanged)
+					foreach (var entry in entries)
 					{
-						if (entry.Entity is ITrackable trackable)
+						if (entry.State != EntityState.Unchanged)
 						{
-							var userId = trackable.CreatedById == Guid.Empty ? Guid.Parse(currentUserId) : trackable.CreatedById;
-
-							switch (entry.State)
+							if (entry.Entity is ITrackable trackable)
 							{
-								case EntityState.Added:
-									trackable.CreatedAt = trackable.CreatedAt == DateTimeOffset.MinValue ? DateTimeOffset.UtcNow : trackable.CreatedAt;
-									trackable.CreatedById = userId;
-									break;
-								case EntityState.Modified:
-									trackable.ModifiedAt = DateTimeOffset.UtcNow;
-									trackable.ModifiedById = userId;
-									break;
-								case EntityState.Deleted:
-									trackable.ModifiedAt = DateTimeOffset.UtcNow;
-									trackable.ModifiedById = userId;
-									break;
-							}
+								var userId = trackable.CreatedById == Guid.Empty ? Guid.Parse(currentUserId) : trackable.CreatedById;
 
-							if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-							{
-								var validationContext = new ValidationContext(entry.Entity);
-								Validator.ValidateObject(entry.Entity, validationContext, true);
+								switch (entry.State)
+								{
+									case EntityState.Added:
+										trackable.CreatedAt = trackable.CreatedAt == DateTimeOffset.MinValue ? DateTimeOffset.UtcNow : trackable.CreatedAt;
+										trackable.CreatedById = userId;
+										break;
+									case EntityState.Modified:
+										trackable.ModifiedAt = DateTimeOffset.UtcNow;
+										trackable.ModifiedById = userId;
+										break;
+									case EntityState.Deleted:
+										trackable.ModifiedAt = DateTimeOffset.UtcNow;
+										trackable.ModifiedById = userId;
+										break;
+								}
+
+								if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+								{
+									var validationContext = new ValidationContext(entry.Entity);
+									Validator.ValidateObject(entry.Entity, validationContext, true);
+								}
 							}
 						}
 					}

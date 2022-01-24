@@ -48,7 +48,6 @@ namespace Pushfi.Application.Customer.Handlers
         public async Task<RegistrationResponseModel> Handle(RegistrationCommand request, CancellationToken cancellationToken)
         {
             var userExists = await _userManager.FindByEmailAsync(request.Email);
-
             if (userExists != null)
             {
                 throw new BusinessException(Strings.EmailAlreadyExsists);
@@ -59,6 +58,19 @@ namespace Pushfi.Application.Customer.Handlers
 
             user.SecurityStamp = Guid.NewGuid().ToString();
 
+            long EnfortraUserID = 0;
+            // Check if user exsists in Enfortra
+            try
+            {
+                EnfortraUserID = await this._enfortraService.CreateNewUserEnrollmentAsync(enfortraModel);
+            }
+            catch (BusinessException ex)
+            {
+                if (ex.Message == Strings.EnfortraUserExsists)
+                {
+                    throw new BusinessException(ex.Message);
+                }
+            }
 
             // Create user
             var userResult = await this._userManager.CreateAsync(user, request.Password);
@@ -74,7 +86,7 @@ namespace Pushfi.Application.Customer.Handlers
             // Create customer
             var customer = this._mapper.Map<CustomerEntity>(request);
             customer.UserId = newUser.Id;
-            customer.EnfortraUserID = await this._enfortraService.CreateNewUserEnrollmentAsync(enfortraModel);
+            customer.EnfortraUserID = EnfortraUserID;
             customer.ProcessStatus = ProcessStatus.Registration;
             await this._context.Customer.AddAsync(customer);
             await this._context.SaveChangesAsync(cancellationToken);
@@ -96,7 +108,7 @@ namespace Pushfi.Application.Customer.Handlers
             var token = new JwtSecurityToken(
                 issuer: this._jwtConfiguration.ValidIssuer,
                 audience: this._jwtConfiguration.ValidAudience,
-                expires: DateTime.UtcNow.AddHours(3),
+                expires: DateTime.UtcNow.AddHours(24),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

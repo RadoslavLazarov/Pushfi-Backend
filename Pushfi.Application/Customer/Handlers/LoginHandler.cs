@@ -40,7 +40,7 @@ namespace Pushfi.Application.Customer.Handlers
 
             if (user == null)
             {
-                throw new EntityNotFoundException(string.Format(Strings.UserDoesNotExsists));
+                throw new BusinessException(string.Format(Strings.UserDoesNotExsists));
             }
 
             // TODO
@@ -72,7 +72,7 @@ namespace Pushfi.Application.Customer.Handlers
             var token = new JwtSecurityToken(
                 issuer: this._jwtConfiguration.ValidIssuer,
                 audience: this._jwtConfiguration.ValidAudience,
-                expires: DateTime.UtcNow.AddHours(3),
+                expires: DateTime.UtcNow.AddHours(24),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

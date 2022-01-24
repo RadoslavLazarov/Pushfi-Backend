@@ -31,6 +31,7 @@ namespace Pushfi.WebAPI.Controllers
 			await Mediator.Send(command);
 		}
 
+		[Authorize]
 		[HttpGet]
         [Route(nameof(ProcessStatus))]
         public async Task<ActionResult<ProcessStatusModel>> ProcessStatus([FromQuery] ProcessStatusCommand command)

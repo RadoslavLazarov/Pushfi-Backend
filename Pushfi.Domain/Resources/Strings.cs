@@ -19,5 +19,9 @@
         public const string SpecifiedTypeIsNotEnum = "The specified type is not an enum";
         #endregion
         #endregion
+
+        #region Enfortra errors
+        public const string EnfortraUserExsists = "User already exists in the Enfortra platform, try an alternate email address.";
+        #endregion
     }
 }

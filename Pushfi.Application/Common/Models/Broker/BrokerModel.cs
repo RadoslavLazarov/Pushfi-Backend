@@ -56,14 +56,13 @@ namespace Pushfi.Application.Common.Models.Broker
         public EntityImageModel LogoImage { get; set; }
 
         [MaxFileSize(2 * 1024 * 1024)] // 2mb
-        [AllowedExtensions(new string[] { ".png", ".jpeg", ".jpg" })]
+        [AllowedExtensions(new string[] { ".png", ".jpeg", ".jpg", ".JPG" })]
         public IFormFile LogoImageFile { get; set; }
 
         [Required]
         [MaxLength(100)]
         public string ESignature { get; set; }
 
-        [Required]
         [MaxLength(UserEntityConstants.WebsiteURLMaxLenght)]
         public string BusinessWebsiteURL { get; set; }
 

@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pushfi.Application;
+using Pushfi.AzureBlobStorage;
 using Pushfi.Domain.Entities.Authentication;
 using Pushfi.Infrastructure;
 using Pushfi.Infrastructure.Middlewares;
@@ -15,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddAzureBlobStorage(builder.Configuration);
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(o =>
 {
@@ -49,6 +52,14 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddControllers();
+//builder.Services.Configure<FormOptions>(options =>
+//{
+//    options.ValueLengthLimit = int.MaxValue;
+//    options.MultipartBodyLengthLimit = int.MaxValue;
+//    options.MultipartHeadersLengthLimit = int.MaxValue;
+//    options.MemoryBufferThreshold = int.MaxValue;
+//});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

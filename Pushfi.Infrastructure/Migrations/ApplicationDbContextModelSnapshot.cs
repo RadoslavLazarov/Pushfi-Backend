@@ -222,6 +222,94 @@ namespace Pushfi.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Pushfi.Domain.Entities.Broker.BrokerEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id")
+                        .HasColumnOrder(0);
+
+                    b.Property<string>("AdditionalDocument")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("BackEndFee")
+                        .HasColumnType("float");
+
+                    b.Property<string>("BrandingType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("BusinessWebsiteURL")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CompanyName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CompanyPhoneNumber")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("DisbursementAccountInfo")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ESignature")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LogoImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MobilePhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<string>("TAXID")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("UrlPath")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WebsiteURL")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UrlPath")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Broker");
+                });
+
             modelBuilder.Entity("Pushfi.Domain.Entities.Customer.CustomerEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -237,6 +325,9 @@ namespace Pushfi.Infrastructure.Migrations
                     b.Property<bool?>("AgreementCommunications")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("BrokerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("BusinessAddress")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -249,8 +340,8 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("BusinessPhoneNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<DateTimeOffset?>("BusinessStartDate")
                         .HasColumnType("datetimeoffset");
@@ -261,8 +352,8 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CollegeUniversityName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CompanyName")
                         .HasMaxLength(100)
@@ -297,7 +388,7 @@ namespace Pushfi.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("DateOfBirth")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("DegreeObrained")
+                    b.Property<string>("DegreeObtained")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -312,16 +403,16 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("EmployerPhoneNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<long>("EnfortraUserID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<double>("FundingAmountRequested")
                         .HasColumnType("float");
@@ -336,8 +427,8 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LoanProducts")
                         .IsRequired()
@@ -349,13 +440,13 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("MiddleName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MobilePhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<double>("MonthlyGrossIncomeAmount")
                         .HasColumnType("float");
@@ -421,8 +512,8 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TAXID")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<double>("TotalAnnualHouseholdIncome")
                         .HasColumnType("float");
@@ -431,8 +522,8 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("WebsiteURL")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("YearGraduated")
                         .HasMaxLength(4)
@@ -455,6 +546,9 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnName("Id")
                         .HasColumnOrder(0);
 
+                    b.Property<double?>("BackEndFee")
+                        .HasColumnType("float");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset")
                         .HasColumnName("CreatedAt")
@@ -465,10 +559,13 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnName("CreatedById")
                         .HasColumnOrder(2);
 
-                    b.Property<int>("HighOffer")
+                    b.Property<int?>("CreditScore")
                         .HasColumnType("int");
 
-                    b.Property<int>("LowOffer")
+                    b.Property<int?>("HighOffer")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LowOffer")
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
@@ -481,14 +578,17 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasColumnName("ModifiedById")
                         .HasColumnOrder(4);
 
-                    b.Property<double>("TierFrom")
+                    b.Property<double?>("TierFrom")
                         .HasColumnType("float");
 
-                    b.Property<double>("TierTo")
+                    b.Property<double?>("TierTo")
                         .HasColumnType("float");
 
-                    b.Property<double>("TotalFundingAchieved")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("TotalMonthlyPayments")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -572,6 +672,17 @@ namespace Pushfi.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Pushfi.Domain.Entities.Broker.BrokerEntity", b =>
+                {
+                    b.HasOne("Pushfi.Domain.Entities.Authentication.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Customer.CustomerEntity", b =>

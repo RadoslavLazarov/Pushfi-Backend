@@ -1,0 +1,209 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.AzureBlobStorage\\Pushfi.AzureBlobStorage.csproj": {}
+  },
+  "projects": {
+    "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.AzureBlobStorage\\Pushfi.AzureBlobStorage.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.AzureBlobStorage\\Pushfi.AzureBlobStorage.csproj",
+        "projectName": "Pushfi.AzureBlobStorage",
+        "projectPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.AzureBlobStorage\\Pushfi.AzureBlobStorage.csproj",
+        "packagesPath": "C:\\Users\\rados\\.nuget\\packages\\",
+        "outputPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.AzureBlobStorage\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\rados\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/flatrocktech/_packaging/FlatRockTech%40Local/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Domain\\Pushfi.Domain.csproj": {
+                "projectPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Domain\\Pushfi.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.10.0, )"
+            },
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.13, )"
+            },
+            "Microsoft.Extensions.Options.ConfigurationExtensions": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Common\\Pushfi.Common.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Common\\Pushfi.Common.csproj",
+        "projectName": "Pushfi.Common",
+        "projectPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Common\\Pushfi.Common.csproj",
+        "packagesPath": "C:\\Users\\rados\\.nuget\\packages\\",
+        "outputPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Common\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\rados\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/flatrocktech/_packaging/FlatRockTech%40Local/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Domain\\Pushfi.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Domain\\Pushfi.Domain.csproj",
+        "projectName": "Pushfi.Domain",
+        "projectPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Domain\\Pushfi.Domain.csproj",
+        "packagesPath": "C:\\Users\\rados\\.nuget\\packages\\",
+        "outputPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\rados\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/flatrocktech/_packaging/FlatRockTech%40Local/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Common\\Pushfi.Common.csproj": {
+                "projectPath": "D:\\Web Projects\\Pushfi\\src\\Pushfi.Backend\\Pushfi.Common\\Pushfi.Common.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.13, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

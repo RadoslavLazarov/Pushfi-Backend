@@ -16,7 +16,10 @@
         #endregion
 
         #region Other
-        public const string SpecifiedTypeIsNotEnum = "The specified type is not an enum";
+        public const string SpecifiedTypeIsNotEnum = "The specified type is not an enum!";
+        public const string OnlyImagesAreAllowedToBeUploaded = "Only images are allowed to be uploaded!";
+        public const string UrlPathExsists = "URL Path already exsists!";
+        public const string FileUploadFailed = "File upload failed!";
         #endregion
         #endregion
 

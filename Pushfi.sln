@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pushfi.Domain", "Pushfi.Dom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pushfi.Infrastructure", "Pushfi.Infrastructure\Pushfi.Infrastructure.csproj", "{ABD440C8-D462-4911-92E9-A0B002F3251C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pushfi.Common", "Pushfi.Common\Pushfi.Common.csproj", "{8AD38942-DE07-4B54-B2CC-28E2AD7AF418}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pushfi.Common", "Pushfi.Common\Pushfi.Common.csproj", "{8AD38942-DE07-4B54-B2CC-28E2AD7AF418}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pushfi.AzureBlobStorage", "Pushfi.AzureBlobStorage\Pushfi.AzureBlobStorage.csproj", "{49B4E173-A56C-45D0-97B5-223C208E1FCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{8AD38942-DE07-4B54-B2CC-28E2AD7AF418}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AD38942-DE07-4B54-B2CC-28E2AD7AF418}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AD38942-DE07-4B54-B2CC-28E2AD7AF418}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49B4E173-A56C-45D0-97B5-223C208E1FCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B4E173-A56C-45D0-97B5-223C208E1FCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B4E173-A56C-45D0-97B5-223C208E1FCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49B4E173-A56C-45D0-97B5-223C208E1FCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

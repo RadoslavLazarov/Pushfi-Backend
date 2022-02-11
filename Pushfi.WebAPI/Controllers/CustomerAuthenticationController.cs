@@ -9,9 +9,10 @@ namespace Pushfi.WebAPI.Controllers
 	public class CustomerAuthenticationController : ApiControllerBase
 	{
 		[HttpPost]
-		[Route(nameof(Registration))]
-		public async Task<ActionResult<RegistrationResponseModel>> Registration(RegistrationCommand command)
+		[Route("{BrokerPath}/" + nameof(Registration))]
+		public async Task<ActionResult<RegistrationResponseModel>> Registration(RegistrationCommand command, [FromRoute] string brokerPath)
 		{
+			command.BrokerPath = brokerPath;
 			return await Mediator.Send(command);
 		}
 

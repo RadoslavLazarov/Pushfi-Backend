@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Common.Interfaces;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Entities.Customer;
 using Pushfi.Domain.Entities.Email;
 using Pushfi.Infrastructure.Persistence.EntityConfigurations;
@@ -28,7 +29,8 @@ namespace Pushfi.Infrastructure.Persistence
         public DbContext DbContext { get; }
 
         public DbSet<CustomerEntity> Customer { get; set; }
-        public DbSet<EmailTemplateEntity> EmailTemplate { get; set; }
+		public DbSet<BrokerEntity> Broker { get; set; }
+		public DbSet<EmailTemplateEntity> EmailTemplate { get; set; }
 		public DbSet<CustomerEmailHistoryEntity> CustomerEmailHistory { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)

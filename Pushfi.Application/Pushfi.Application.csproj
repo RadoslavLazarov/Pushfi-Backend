@@ -15,7 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pushfi.AzureBlobStorage\Pushfi.AzureBlobStorage.csproj" />
     <ProjectReference Include="..\Pushfi.Domain\Pushfi.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Models\Customer\" />
   </ItemGroup>
 
 </Project>

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pushfi.Application\Pushfi.Application.csproj" />
+    <ProjectReference Include="..\Pushfi.AzureBlobStorage\Pushfi.AzureBlobStorage.csproj" />
     <ProjectReference Include="..\Pushfi.Infrastructure\Pushfi.Infrastructure.csproj" />
   </ItemGroup>
 

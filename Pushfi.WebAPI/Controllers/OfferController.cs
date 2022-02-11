@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pushfi.Application.Common.Models;
 using Pushfi.Application.Customer.Commands;
 
 namespace Pushfi.WebAPI.Controllers
@@ -13,5 +14,13 @@ namespace Pushfi.WebAPI.Controllers
         {
             await Mediator.Send(command);
         }
-	}
+
+        [Authorize]
+        [HttpGet]
+        [Route(nameof(GetLatestOffer))]
+        public async Task<ActionResult<LatestOfferResponseModel>> GetLatestOffer([FromQuery] LatestOfferCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+    }
 }

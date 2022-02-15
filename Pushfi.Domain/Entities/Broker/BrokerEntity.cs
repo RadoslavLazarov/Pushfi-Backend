@@ -31,6 +31,7 @@ namespace Pushfi.Domain.Entities.Broker
         [MaxLength(UserEntityConstants.NameMaxLength)]
         public string LastName { get; set; }
 
+        [Required]
         [MaxLength(UserEntityConstants.NameMaxLength)]
         public string CompanyName { get; set; }
 

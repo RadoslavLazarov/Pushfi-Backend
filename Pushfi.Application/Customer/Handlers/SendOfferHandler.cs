@@ -12,6 +12,8 @@ using System.Globalization;
 using System.Text;
 using Pushfi.Domain.Entities.Email;
 using Pushfi.Application.Common.Constants;
+using Pushfi.Application.Common.Models.Authentication;
+using Pushfi.Domain.Entities.Broker;
 
 namespace Pushfi.Application.Customer.Handlers
 {
@@ -72,12 +74,13 @@ namespace Pushfi.Application.Customer.Handlers
             var offersString = "$" + lowOffer + " - " + "$" + highOffer;
 
             var tier = PushfiCalculator.CalculateTier(creditScore);
+
             // Tier DECLINE
             if (tier.Count == 0)
             {
-                emailType = EmailTemplateType.CreditDecline;
-                // send reject email
-                // return;
+                await this.CreditDecline(customer);
+
+                return new Unit();
             }
             var tierString = tier[0].ToString(CultureInfo.InvariantCulture) + "% - " + tier[1].ToString(CultureInfo.InvariantCulture) + "%";
 
@@ -120,7 +123,7 @@ namespace Pushfi.Application.Customer.Handlers
 
             var adminEmail = new EmailModel()
             {
-                Receiver = "submissions@pushfi.app",
+                Receiver = _sendGridConfiguration.AdminReceiver,
                 Sender = _sendGridConfiguration.Sender,
                 Subject = subject,
                 HtmlContent = htmlContent
@@ -150,6 +153,39 @@ namespace Pushfi.Application.Customer.Handlers
             }
 
             return new Unit();
+        }
+
+        private async Task CreditDecline(CustomerModel customer)
+        {
+            var emailType = EmailTemplateType.CreditDecline;
+            var emailTemplate = await _emailService.GetEmailTemplateAsync(emailType);
+
+            var customerEmail = new EmailModel()
+            {
+                Receiver = customer.Email,
+                Sender = _sendGridConfiguration.Sender,
+                Subject = emailTemplate.Subject,
+                HtmlContent = emailTemplate.HtmlContent
+            };
+
+            await _emailService.SendAsync(customerEmail);
+
+            var adminEmail = new EmailModel()
+            {
+                Receiver = _sendGridConfiguration.AdminReceiver,
+                Sender = _sendGridConfiguration.Sender,
+                Subject = emailTemplate.Subject,
+                HtmlContent = emailTemplate.HtmlContent
+            };
+            await _emailService.SendAsync(adminEmail);
+
+            var emailHistoryEntity = new CustomerEmailHistoryEntity()
+            {
+                Type = emailType
+            };
+
+            this._context.CustomerEmailHistory.Add(emailHistoryEntity);
+            this._context.SaveChanges();
         }
     }
 }

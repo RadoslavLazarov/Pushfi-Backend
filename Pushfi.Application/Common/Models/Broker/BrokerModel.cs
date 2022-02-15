@@ -31,6 +31,7 @@ namespace Pushfi.Application.Common.Models.Broker
         public string MobilePhoneNumber { get; set; }
 
 
+        [Required]
         [MaxLength(UserEntityConstants.NameMaxLength)]
         public string CompanyName { get; set; }
 

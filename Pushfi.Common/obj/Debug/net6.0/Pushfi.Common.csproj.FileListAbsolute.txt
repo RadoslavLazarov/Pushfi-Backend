@@ -9,3 +9,4 @@ D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.
 D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.dll
 D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\ref\Pushfi.Common.dll
 D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.pdb
+D:\Web Projects\Pushfi\src\Pushfi.Backend\Pushfi.Common\obj\Debug\net6.0\Pushfi.Common.csproj.AssemblyReference.cache

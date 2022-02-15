@@ -107,16 +107,14 @@ namespace Pushfi.Application.Broker.Handlers
             await this._context.Broker.AddAsync(broker);
             await this._context.SaveChangesAsync(cancellationToken);
 
-            var customerEmail = new EmailModel()
+            var brokerEmail = new EmailModel()
             {
                 Receiver = newUser.Email,
                 Sender = _sendGridConfiguration.Sender,
-                Subject = "PushFi registration successfully",
-                Message = "Thank you for joining the PushFi team. This is your unique submission link - https://pushfi.com/"
-                    + broker.UrlPath
-                    + "/customer-apply"
+                Subject = String.Format(Strings.BrokerRegistrationEmailSubject, broker.CompanyName),
+                Message = String.Format(Strings.BrokerRegistrationEmailMessage, broker.UrlPath),
             };
-            await _emailService.SendAsync(customerEmail);
+            await _emailService.SendAsync(brokerEmail);
 
             return new Unit();
         }

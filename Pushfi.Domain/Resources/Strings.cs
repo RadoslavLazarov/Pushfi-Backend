@@ -26,5 +26,10 @@
         #region Enfortra errors
         public const string EnfortraUserExsists = "User already exists in the Enfortra platform, try an alternate email address.";
         #endregion
+
+        #region Email
+        public const string BrokerRegistrationEmailSubject = "PushFi registration successful: {0}";
+        public const string BrokerRegistrationEmailMessage = "Thank you for joining the PushFi team. This is your unique submission link - https://pushfi.com/{0}/customer-apply";
+        #endregion
     }
 }

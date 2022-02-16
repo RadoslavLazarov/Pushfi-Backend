@@ -308,7 +308,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Broker");
+                    b.ToTable("Broker", (string)null);
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Customer.CustomerEntity", b =>
@@ -536,7 +536,7 @@ namespace Pushfi.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Email.CustomerEmailHistoryEntity", b =>
@@ -593,7 +593,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomerEmailHistory");
+                    b.ToTable("CustomerEmailHistory", (string)null);
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Email.EmailTemplateEntity", b =>
@@ -621,7 +621,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailTemplate");
+                    b.ToTable("EmailTemplate", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

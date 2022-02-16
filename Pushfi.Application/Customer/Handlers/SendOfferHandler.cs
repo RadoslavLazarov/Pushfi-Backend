@@ -78,7 +78,7 @@ namespace Pushfi.Application.Customer.Handlers
             // Tier DECLINE
             if (tier.Count == 0)
             {
-                await this.CreditDecline(customer);
+                await this.CreditDecline(customer, broker, creditScore);
 
                 return new Unit();
             }
@@ -155,16 +155,17 @@ namespace Pushfi.Application.Customer.Handlers
             return new Unit();
         }
 
-        private async Task CreditDecline(CustomerModel customer)
+        private async Task CreditDecline(CustomerModel customer, BrokerEntity broker, int creditScore)
         {
             var emailType = EmailTemplateType.CreditDecline;
             var emailTemplate = await _emailService.GetEmailTemplateAsync(emailType);
+            var subject = broker.CompanyName + "- " + emailTemplate.Subject + " " + customer.FirstName + " " + customer.LastName;
 
             var customerEmail = new EmailModel()
             {
                 Receiver = customer.Email,
                 Sender = _sendGridConfiguration.Sender,
-                Subject = emailTemplate.Subject,
+                Subject = subject,
                 HtmlContent = emailTemplate.HtmlContent
             };
 
@@ -174,13 +175,14 @@ namespace Pushfi.Application.Customer.Handlers
             {
                 Receiver = _sendGridConfiguration.AdminReceiver,
                 Sender = _sendGridConfiguration.Sender,
-                Subject = emailTemplate.Subject,
+                Subject = subject,
                 HtmlContent = emailTemplate.HtmlContent
             };
             await _emailService.SendAsync(adminEmail);
 
             var emailHistoryEntity = new CustomerEmailHistoryEntity()
             {
+                CreditScore = creditScore,
                 Type = emailType
             };
 

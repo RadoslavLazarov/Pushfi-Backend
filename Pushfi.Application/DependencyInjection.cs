@@ -10,6 +10,7 @@ namespace Pushfi.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<AppConfiguration>(configuration.GetSection("App"));
             services.Configure<JwtConfiguration>(configuration.GetSection("Jwt"));
             services.Configure<EnfortraConfiguration>(configuration.GetSection("Enfortra"));
             services.Configure<SendGridConfiguration>(configuration.GetSection("SendGrid"));

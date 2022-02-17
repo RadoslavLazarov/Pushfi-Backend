@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Pushfi.Application.Broker.Commands;
@@ -21,27 +20,27 @@ namespace Pushfi.Application.Broker.Handlers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationDbContext _context;
-        private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _azureBlobStorageService;
         private readonly IEmailService _emailService;
+        private readonly AppConfiguration _appConfiguration;
         private readonly SendGridConfiguration _sendGridConfiguration;
 
         public BrokerRegistrationHandler(
             UserManager<ApplicationUser> userManager,
             IApplicationDbContext context,
-            IHttpContextAccessor accessor,
             IMapper mapper,
             IAzureBlobStorageService azureBlobStorageService,
-            IEmailService _emailService,
+            IEmailService emailService,
+            IOptionsMonitor<AppConfiguration> appConfiguration,
             IOptionsMonitor<SendGridConfiguration> sendGridConfiguration)
         {
             this._userManager = userManager;
             this._context = context;
-            this._accessor = accessor;
             this._mapper = mapper;
             this._azureBlobStorageService = azureBlobStorageService;
-            this._emailService = _emailService;
+            this._emailService = emailService;
+            this._appConfiguration = appConfiguration.CurrentValue;
             this._sendGridConfiguration = sendGridConfiguration.CurrentValue;
         }
 
@@ -111,8 +110,6 @@ namespace Pushfi.Application.Broker.Handlers
             await this._context.Broker.AddAsync(broker);
             await this._context.SaveChangesAsync(cancellationToken);
 
-            var baseUrl = $"{this._accessor.HttpContext.Request.Scheme}://{this._accessor.HttpContext.Request.Host.ToUriComponent()}";
-
             var brokerEmail = new EmailModel()
             {
                 Receiver = newUser.Email,
@@ -120,7 +117,7 @@ namespace Pushfi.Application.Broker.Handlers
                 Subject = String.Format(Strings.BrokerRegistrationEmailSubject, broker.CompanyName),
                 Message = String.Format(
                     Strings.BrokerRegistrationEmailMessage,
-                    baseUrl,
+                    this._appConfiguration.FrontEndBaseUrl,
                     broker.UrlPath),
             };
             await _emailService.SendAsync(brokerEmail);

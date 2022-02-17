@@ -29,7 +29,7 @@
 
         #region Email
         public const string BrokerRegistrationEmailSubject = "PushFi registration successful: {0}";
-        public const string BrokerRegistrationEmailMessage = "Thank you for joining the PushFi team. This is your unique submission link - https://pushfi.com/{0}/customer-apply";
+        public const string BrokerRegistrationEmailMessage = "Thank you for joining the PushFi team. This is your unique submission link - {0}/{1}/customer-apply";
         #endregion
     }
 }

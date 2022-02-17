@@ -54,14 +54,13 @@ namespace Pushfi.Application.Customer.Handlers
             }
 
             var emailType = EmailTemplateType.CreditApproved;
-
             var creditReport = await _enfortraService.GetFullCreditReportAsync(customer.Email);
 
+            // Credit Freeze
             if (bool.Parse(creditReport.Root.MergeCreditReport.SB168Frozen.TUC))
             {
-                emailType = EmailTemplateType.CreditFreeze;
-                // send email with link https://www.transunion.com/credit-freeze 
-                // return;
+                await this.CreditFreezeAsync(customer, broker);
+                return new Unit();
             }
 
             var monthlyIncome = (decimal)customer.MonthlyGrossIncomeAmount;
@@ -78,8 +77,7 @@ namespace Pushfi.Application.Customer.Handlers
             // Tier DECLINE
             if (tier.Count == 0)
             {
-                await this.CreditDecline(customer, broker, creditScore);
-
+                await this.CreditDeclineAsync(customer, broker, creditScore);
                 return new Unit();
             }
             var tierString = tier[0].ToString(CultureInfo.InvariantCulture) + "% - " + tier[1].ToString(CultureInfo.InvariantCulture) + "%";
@@ -93,8 +91,6 @@ namespace Pushfi.Application.Customer.Handlers
                 this._azureBlobStorageConfiguration.ContainerName +
                 AzureBlobStorageConstants.BrokerDefaultLogoImagePath;
 
-            var logoHeight = broker.LogoImage?.Height ?? AzureBlobStorageConstants.BrokerDefaultLogoImageHeight;
-
             //var rootDirectory = Directory.GetParent(Environment.CurrentDirectory).FullName;
             //var path = rootDirectory + "/Pushfi.Domain/Resources/EmailTemplates/CreditOffer.html";
             //var htmlTemplate = File.ReadAllText(path);
@@ -103,7 +99,6 @@ namespace Pushfi.Application.Customer.Handlers
 
             var sb = new StringBuilder(emailTemplate.HtmlContent);
             sb.Replace("@@logoUrl@@", logoUrl)
-              .Replace("@@logoHeight@@", logoHeight.ToString())
               .Replace("@@names@@", customer.FirstName + " " + customer.LastName)
               .Replace("@@offers@@", offersString)
               .Replace("@@tier@@", tierString)
@@ -155,18 +150,23 @@ namespace Pushfi.Application.Customer.Handlers
             return new Unit();
         }
 
-        private async Task CreditDecline(CustomerModel customer, BrokerEntity broker, int creditScore)
+        private async Task CreditDeclineAsync(CustomerModel customer, BrokerEntity broker, int creditScore)
         {
             var emailType = EmailTemplateType.CreditDecline;
             var emailTemplate = await _emailService.GetEmailTemplateAsync(emailType);
             var subject = broker.CompanyName + "- " + emailTemplate.Subject + " " + customer.FirstName + " " + customer.LastName;
+
+            var sb = new StringBuilder(emailTemplate.HtmlContent);
+            sb.Replace("@@creditScore@@", creditScore.ToString());
+
+            var htmlContent = sb.ToString();
 
             var customerEmail = new EmailModel()
             {
                 Receiver = customer.Email,
                 Sender = _sendGridConfiguration.Sender,
                 Subject = subject,
-                HtmlContent = emailTemplate.HtmlContent
+                HtmlContent = htmlContent
             };
 
             await _emailService.SendAsync(customerEmail);
@@ -176,13 +176,49 @@ namespace Pushfi.Application.Customer.Handlers
                 Receiver = _sendGridConfiguration.AdminReceiver,
                 Sender = _sendGridConfiguration.Sender,
                 Subject = subject,
-                HtmlContent = emailTemplate.HtmlContent
+                HtmlContent = htmlContent
             };
             await _emailService.SendAsync(adminEmail);
 
             var emailHistoryEntity = new CustomerEmailHistoryEntity()
             {
                 CreditScore = creditScore,
+                Type = emailType
+            };
+
+            this._context.CustomerEmailHistory.Add(emailHistoryEntity);
+            this._context.SaveChanges();
+        }
+
+        private async Task CreditFreezeAsync(CustomerModel customer, BrokerEntity broker)
+        {
+            var emailType = EmailTemplateType.CreditFreeze;
+            //var emailTemplate = await _emailService.GetEmailTemplateAsync(emailType);
+            var subject = broker.CompanyName + "- Credit Freeze: " + customer.FirstName + " " + customer.LastName;
+
+            var customerEmail = new EmailModel()
+            {
+                Receiver = customer.Email,
+                Sender = _sendGridConfiguration.Sender,
+                Subject = subject,
+                Message = "Condition: Credit Freeze present on bureau. Please visit the link to remove: https://www.transunion.com/credit-freeze"
+                //HtmlContent = emailTemplate.HtmlContent
+            };
+
+            await _emailService.SendAsync(customerEmail);
+
+            var adminEmail = new EmailModel()
+            {
+                Receiver = _sendGridConfiguration.AdminReceiver,
+                Sender = _sendGridConfiguration.Sender,
+                Subject = subject,
+                Message = "Condition: Credit Freeze present on bureau. Please visit the link to remove: https://www.transunion.com/credit-freeze"
+                //HtmlContent = emailTemplate.HtmlContent
+            };
+            await _emailService.SendAsync(adminEmail);
+
+            var emailHistoryEntity = new CustomerEmailHistoryEntity()
+            {
                 Type = emailType
             };
 

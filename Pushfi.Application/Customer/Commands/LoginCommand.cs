@@ -5,5 +5,6 @@ namespace Pushfi.Application.Customer.Commands
 {
 	public class LoginCommand : LoginRequestModel, IRequest<LoginResponseModel>
 	{
+		public string BrokerPath { get; set; }
 	}
 }

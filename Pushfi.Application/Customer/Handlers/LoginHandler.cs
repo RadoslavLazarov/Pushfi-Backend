@@ -17,17 +17,20 @@ namespace Pushfi.Application.Customer.Handlers
 {
     public class LoginHandler : IRequestHandler<LoginCommand, LoginResponseModel>
     {
+        private readonly IApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly JwtConfiguration _jwtConfiguration;
         private readonly IEnfortraService _enfortraService;
 
         public LoginHandler(
+            IApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IOptionsMonitor<JwtConfiguration> optionsMonitor,
             IEnfortraService enfortraService)
         {
+            this._context = context;
             this._userManager = userManager;
             this._roleManager = roleManager;
             this._jwtConfiguration = optionsMonitor.CurrentValue;
@@ -36,11 +39,17 @@ namespace Pushfi.Application.Customer.Handlers
 
         public async Task<LoginResponseModel> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
+            var broker = this._context.Broker.Where(x => x.UrlPath == request.BrokerPath).FirstOrDefault();
             var user = await _userManager.FindByEmailAsync(request.Email);
-
             if (user == null)
             {
                 throw new BusinessException(string.Format(Strings.UserDoesNotExsists));
+            }
+
+            var customerExsists = this._context.Customer.Where(x => x.UserId == user.Id && x.BrokerId == broker.Id).FirstOrDefault();
+            if (customerExsists == null)
+            {
+                throw new BusinessException(string.Format(Strings.WrongUser));
             }
 
             // TODO

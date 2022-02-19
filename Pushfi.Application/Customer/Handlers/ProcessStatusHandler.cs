@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Application.Customer.Commands;
 using Pushfi.Domain.Enums;
+using System.Security;
 
 namespace Pushfi.Application.Customer.Handlers
 {
@@ -28,15 +30,25 @@ namespace Pushfi.Application.Customer.Handlers
 
         public async Task<ProcessStatusModel> Handle(ProcessStatusCommand request, CancellationToken cancellationToken)
         {
-            var model = new ProcessStatusModel();
-            var customer = await _userService.GetCurrentCustomerAsync();
+            var broker = this._context.Broker.Where(x => x.UrlPath == request.BrokerPath).FirstOrDefault();
+            var currentUserId = this._userService.GetCurrentUserId();
+            var customer = this._context.Customer
+                .Where(x => x.UserId == currentUserId && x.BrokerId == broker.Id)
+                .Include(x => x.User)
+                .FirstOrDefault();
+            if (customer == null)
+            {
+                throw new SecurityException();
+            }       
 
+            var model = new ProcessStatusModel();
+            
             // TODO: needs refactoring
             if (customer.ProcessStatus == ProcessStatus.Registration)
             {
                 model.ProcessStatus = ProcessStatus.Registration;
 
-                var kbaStatus = await this._enfortraService.GetKBAStatusAsync(customer.Email);
+                var kbaStatus = await this._enfortraService.GetKBAStatusAsync(customer.User.Email);
                 if (kbaStatus is true)
                 {
                     var customerEntity = await this._userService.GetCurrentCustomerEntityAsync();
@@ -47,18 +59,18 @@ namespace Pushfi.Application.Customer.Handlers
                     await this._userService.UpdateCustomerAsync(customerEntity);
                 }
 
-                model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.Email)).CreditReportUrl;
+                model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.User.Email)).CreditReportUrl;
             }
             if (customer.ProcessStatus == ProcessStatus.Authentication)
             {
                 model.ProcessStatus = ProcessStatus.Authentication;
-                model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.Email)).CreditReportUrl;
+                model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.User.Email)).CreditReportUrl;
             }
 
             if (customer.ProcessStatus == ProcessStatus.GetOffer)
             {
                 model.ProcessStatus = ProcessStatus.GetOffer;
-                model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.Email)).CreditReportUrl;
+                model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.User.Email)).CreditReportUrl;
             }
 
             return model;

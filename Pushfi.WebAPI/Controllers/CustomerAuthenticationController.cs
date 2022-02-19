@@ -17,9 +17,10 @@ namespace Pushfi.WebAPI.Controllers
 		}
 
 		[HttpPost]
-		[Route(nameof(Login))]
-		public async Task<ActionResult<LoginResponseModel>> Login(LoginCommand command)
+		[Route("{BrokerPath}/" + nameof(Login))]
+		public async Task<ActionResult<LoginResponseModel>> Login(LoginCommand command, [FromRoute] string brokerPath)
 		{
+			command.BrokerPath = brokerPath;
 			return await Mediator.Send(command);
 		}
 
@@ -34,9 +35,10 @@ namespace Pushfi.WebAPI.Controllers
 
 		[Authorize]
 		[HttpGet]
-        [Route(nameof(ProcessStatus))]
-        public async Task<ActionResult<ProcessStatusModel>> ProcessStatus([FromQuery] ProcessStatusCommand command)
+        [Route(nameof(ProcessStatus) + "/{BrokerPath}")]
+        public async Task<ActionResult<ProcessStatusModel>> ProcessStatus([FromQuery] ProcessStatusCommand command, [FromRoute] string brokerPath)
         {
+			command.BrokerPath= brokerPath;
             return await Mediator.Send(command);
         }
 	}

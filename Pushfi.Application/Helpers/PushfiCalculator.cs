@@ -7,6 +7,8 @@
         private const int numberOfPeriods = 48;
         private const int lowOfferRoundFactor = 5000;
         private const int highOfferRoundFactor = 10000;
+        private const int lowRevolvingLine = 15000;
+        private const int highRevolvingLine = 45000;
 
         private const double TierOneRateFrom = 5.99;
         private const double TierOneRateTo = 15.99;
@@ -21,18 +23,33 @@
         private const double TierFourRateTo = 33.99;
 
         // Returns list with low and high offers
-        public static List<int> CalculateOffers(decimal monthlyIncome, decimal totalMonthlyPayments)
+        public static List<int> CalculateOffers(List<int> termLoans)
         {
-            var termLoanProjection = TermLoanProjection(monthlyIncome, totalMonthlyPayments);
-
-            // Round to nearest factor
-            var lowOffer = (int)Math.Round(termLoanProjection * (decimal)lowOfferRate / lowOfferRoundFactor) * lowOfferRoundFactor;
-            var highOffer = (int)Math.Round(termLoanProjection * (decimal)highOfferRate / highOfferRoundFactor) * highOfferRoundFactor;
+            var lowOffer = termLoans[0] + lowRevolvingLine;
+            var highOffer = termLoans[1] + highRevolvingLine;
 
             var result = new List<int>()
             {
                 lowOffer,
                 highOffer
+            };
+
+            return result;
+        }
+
+        // Returns list with low and high term loans
+        public static List<int> CalculateTermLoans(decimal monthlyIncome, decimal totalMonthlyPayments)
+        {
+            var termLoanProjection = TermLoanProjection(monthlyIncome, totalMonthlyPayments);
+
+            // Round to nearest factor
+            var lowTermLoan = (int)Math.Round(termLoanProjection * (decimal)lowOfferRate / lowOfferRoundFactor) * lowOfferRoundFactor;
+            var highTermLoan = (int)Math.Round(termLoanProjection * (decimal)highOfferRate / highOfferRoundFactor) * highOfferRoundFactor;
+
+            var result = new List<int>()
+            {
+                lowTermLoan,
+                highTermLoan
             };
 
             return result;

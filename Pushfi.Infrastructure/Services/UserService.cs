@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Entities.Customer;
 using Pushfi.Domain.Exceptions;
 using Pushfi.Domain.Resources;
@@ -124,6 +125,22 @@ namespace Pushfi.Infrastructure.Services
             var emails = this._context.CustomerEmailHistory.Where(x => x.CreatedById == userId).ToList();
             this._context.CustomerEmailHistory.RemoveRange(emails);
             this._context.SaveChanges();
+        }
+
+        public async Task<BrokerEntity> GetCurrentBrokerEntityAsync()
+        {
+            var userId = this.GetCurrentUserId();
+
+            var broker = await this._context.Broker
+                .Where(x => x.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (broker == null)
+            {
+                throw new EntityNotFoundException(string.Format(Strings.UserDoesNotExsists));
+            }
+
+            return broker;
         }
     }
 }

@@ -9,6 +9,7 @@
 
         #region Identity
         public const string UserDoesNotExsists = "User does not exsists!";
+        public const string WrongUser = "Wrong user!";
         public const string EmailAlreadyExsists = "Email already exsists!";
         public const string WrongPassword = "Wrong password!";
         public const string UserAccountDeleted = "User account is deleted!";

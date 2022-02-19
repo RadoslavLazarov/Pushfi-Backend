@@ -1,5 +1,6 @@
 ﻿using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Entities.Customer;
 
 namespace Pushfi.Application.Common.Interfaces
@@ -13,5 +14,6 @@ namespace Pushfi.Application.Common.Interfaces
         Task<CustomerEntity> GetCurrentCustomerEntityAsync();
         Task UpdateCustomerAsync(CustomerEntity customer);
         Task DeleteCurrentCustomerAsync();
+        Task<BrokerEntity> GetCurrentBrokerEntityAsync();
     }
 }

@@ -63,6 +63,8 @@ namespace Pushfi.Application.Mapping
             this.CreateMap<CustomerEmailHistoryEntity, LatestOfferResponseModel>()
                 .ForMember(x => x.LowOffer, y => y.MapFrom(src => String.Format(CultureInfo.InvariantCulture, "{0:N0}", src.LowOffer)))
                 .ForMember(x => x.HighOffer, y => y.MapFrom(src => String.Format(CultureInfo.InvariantCulture, "{0:N0}", src.HighOffer)))
+                .ForMember(x => x.LowTermLoan, y => y.MapFrom(src => String.Format(CultureInfo.InvariantCulture, "{0:N0}", src.LowTermLoan)))
+                .ForMember(x => x.HighTermLoan, y => y.MapFrom(src => String.Format(CultureInfo.InvariantCulture, "{0:N0}", src.HighTermLoan)))
                 .ReverseMap();
 
             this.CreateMap<BrokerEntity, BrokerDataForCustomerFormModel>()

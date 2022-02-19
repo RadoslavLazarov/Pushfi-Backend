@@ -67,7 +67,13 @@ namespace Pushfi.Application.Customer.Handlers
             var totalMonthlyPayments = Convert.ToDecimal(creditReport.Root.MergeCreditReport.TotalMonthlyPayments.TUC);
             var creditScore = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.TUC);
 
-            var offers = PushfiCalculator.CalculateOffers(monthlyIncome, totalMonthlyPayments);
+            var termLoans = PushfiCalculator.CalculateTermLoans(monthlyIncome, totalMonthlyPayments);
+            var lowTermLoan = String.Format(CultureInfo.InvariantCulture, "{0:N0}", termLoans[0]);
+            var highTermLoan = String.Format(CultureInfo.InvariantCulture, "{0:N0}", termLoans[1]);
+            var termLoansString = "$" + lowTermLoan + " to " + "$" + highTermLoan;
+
+
+            var offers = PushfiCalculator.CalculateOffers(termLoans);
             var lowOffer = String.Format(CultureInfo.InvariantCulture, "{0:N0}", offers[0]);
             var highOffer = String.Format(CultureInfo.InvariantCulture, "{0:N0}", offers[1]);
             var offersString = "$" + lowOffer + " - " + "$" + highOffer;
@@ -101,6 +107,7 @@ namespace Pushfi.Application.Customer.Handlers
             sb.Replace("@@logoUrl@@", logoUrl)
               .Replace("@@names@@", customer.FirstName + " " + customer.LastName)
               .Replace("@@offers@@", offersString)
+              .Replace("@@termLoans@@", termLoansString)
               .Replace("@@tier@@", tierString)
               .Replace("@@backEndFee@@", backEndFeeString);
 
@@ -129,6 +136,8 @@ namespace Pushfi.Application.Customer.Handlers
             {
                 LowOffer = offers[0],
                 HighOffer = offers[1],
+                LowTermLoan = termLoans[0],
+                HighTermLoan = termLoans[1],
                 TierFrom = tier[0],
                 TierTo = tier[1],
                 BackEndFee = backEndFee,

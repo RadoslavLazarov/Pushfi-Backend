@@ -16,6 +16,7 @@ using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Resources;
 using Pushfi.Application.Common.Models.Enfortra.Response.GetFullCreditReport.GetFullCreditReportJson;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pushfi.Application.Customer.Handlers
 {
@@ -47,8 +48,10 @@ namespace Pushfi.Application.Customer.Handlers
         public async Task<Unit> Handle(SendOfferCommand request, CancellationToken cancellationToken)
         {
             var customer = await this._userService.GetCurrentCustomerAsync();
-            var broker = this._context.Broker.Where(x => x.Id == customer.BrokerId).FirstOrDefault();
-
+            var broker = this._context.Broker
+                .Where(x => x.Id == customer.BrokerId)
+                .Include(x => x.User)
+                .FirstOrDefault();
             if (customer == null)
             {
                 // TODO
@@ -144,23 +147,22 @@ namespace Pushfi.Application.Customer.Handlers
             var htmlContent = sb.ToString();
             var subject = customer.FirstName + " " + customer.LastName + " " + emailTemplate.Subject;
 
-            var customerEmail = new EmailModel()
+            var emailModel = new EmailModel()
             {
                 Receiver = customer.Email,
                 Sender = _sendGridConfiguration.Sender,
                 Subject = subject,
                 HtmlContent = htmlContent
             };
-            await _emailService.SendAsync(customerEmail);
+            await _emailService.SendAsync(emailModel);
 
-            var adminEmail = new EmailModel()
-            {
-                Receiver = _sendGridConfiguration.AdminReceiver,
-                Sender = _sendGridConfiguration.Sender,
-                Subject = subject,
-                HtmlContent = htmlContent
-            };
-            await _emailService.SendAsync(adminEmail);
+            // Send copy of email to Admin
+            emailModel.Receiver = _sendGridConfiguration.AdminReceiver;
+            await _emailService.SendAsync(emailModel);
+
+            // Send copy of email to Broker
+            emailModel.Receiver = broker.User.Email;
+            await _emailService.SendAsync(emailModel);
 
             var emailHistoryEntity = new CustomerEmailHistoryEntity()
             {
@@ -227,24 +229,22 @@ namespace Pushfi.Application.Customer.Handlers
 
             var htmlContent = sb.ToString();
 
-            var customerEmail = new EmailModel()
+            var emailModel = new EmailModel()
             {
                 Receiver = customer.Email,
                 Sender = _sendGridConfiguration.Sender,
                 Subject = subject,
                 HtmlContent = htmlContent
             };
+            await _emailService.SendAsync(emailModel);
 
-            await _emailService.SendAsync(customerEmail);
+            // Send copy of email to Admin
+            emailModel.Receiver = _sendGridConfiguration.AdminReceiver;
+            await _emailService.SendAsync(emailModel);
 
-            var adminEmail = new EmailModel()
-            {
-                Receiver = _sendGridConfiguration.AdminReceiver,
-                Sender = _sendGridConfiguration.Sender,
-                Subject = subject,
-                HtmlContent = htmlContent
-            };
-            await _emailService.SendAsync(adminEmail);
+            // Send copy of email to Broker
+            emailModel.Receiver = broker.User.Email;
+            await _emailService.SendAsync(emailModel);
 
             var emailHistoryEntity = new CustomerEmailHistoryEntity()
             {
@@ -265,7 +265,7 @@ namespace Pushfi.Application.Customer.Handlers
             //var emailTemplate = await _emailService.GetEmailTemplateAsync(emailType);
             var subject = broker.CompanyName + "- Credit Freeze: " + customer.FirstName + " " + customer.LastName;
 
-            var customerEmail = new EmailModel()
+            var emailModel = new EmailModel()
             {
                 Receiver = customer.Email,
                 Sender = _sendGridConfiguration.Sender,
@@ -273,18 +273,15 @@ namespace Pushfi.Application.Customer.Handlers
                 Message = "Condition: Credit Freeze present on bureau. Please visit the link to remove: https://www.transunion.com/credit-freeze"
                 //HtmlContent = emailTemplate.HtmlContent
             };
+            await _emailService.SendAsync(emailModel);
 
-            await _emailService.SendAsync(customerEmail);
+            // Send copy of email to Admin
+            emailModel.Receiver = _sendGridConfiguration.AdminReceiver;
+            await _emailService.SendAsync(emailModel);
 
-            var adminEmail = new EmailModel()
-            {
-                Receiver = _sendGridConfiguration.AdminReceiver,
-                Sender = _sendGridConfiguration.Sender,
-                Subject = subject,
-                Message = "Condition: Credit Freeze present on bureau. Please visit the link to remove: https://www.transunion.com/credit-freeze"
-                //HtmlContent = emailTemplate.HtmlContent
-            };
-            await _emailService.SendAsync(adminEmail);
+            // Send copy of email to Broker
+            emailModel.Receiver = broker.User.Email;
+            await _emailService.SendAsync(emailModel);
 
             var emailHistoryEntity = new CustomerEmailHistoryEntity()
             {

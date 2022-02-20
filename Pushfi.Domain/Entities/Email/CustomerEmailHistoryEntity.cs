@@ -16,7 +16,10 @@ namespace Pushfi.Domain.Entities.Email
 
         #region Enfortra GetFullCreditReport
         public decimal? TotalMonthlyPayments { get; set; }
-        public int? CreditScore { get; set; }
+        public int? CreditScoreTUC { get; set; }
+        public int? CreditScoreEXP { get; set; }
+        public int? CreditScoreEQF { get; set; }
+        public virtual List<ScoreFactorEntity> ScoreFactors { get; set; }
         #endregion
 
         public EmailTemplateType Type { get; set; }

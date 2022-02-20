@@ -14,6 +14,7 @@ using Pushfi.Domain.Entities.Email;
 using Pushfi.Application.Common.Constants;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Domain.Entities.Broker;
+using Pushfi.Domain.Resources;
 
 namespace Pushfi.Application.Customer.Handlers
 {
@@ -55,6 +56,8 @@ namespace Pushfi.Application.Customer.Handlers
 
             var emailType = EmailTemplateType.CreditApproved;
             var creditReport = await _enfortraService.GetFullCreditReportAsync(customer.Email);
+            //creditReport.Root.TransriskScores.ScoreFactors.TUC[0].type;
+            //creditReport.Root.TransriskScores.ScoreFactors.TUC[0].factor;
 
             // Credit Freeze
             if (bool.Parse(creditReport.Root.MergeCreditReport.SB168Frozen.TUC))
@@ -65,7 +68,9 @@ namespace Pushfi.Application.Customer.Handlers
 
             var monthlyIncome = (decimal)customer.MonthlyGrossIncomeAmount;
             var totalMonthlyPayments = Convert.ToDecimal(creditReport.Root.MergeCreditReport.TotalMonthlyPayments.TUC);
-            var creditScore = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.TUC);
+            var creditScoreTUC = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.TUC);
+            var creditScoreEXP = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.EXP);
+            var creditScoreEQF = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.EQF);
 
             var termLoans = PushfiCalculator.CalculateTermLoans(monthlyIncome, totalMonthlyPayments);
             var lowTermLoan = String.Format(CultureInfo.InvariantCulture, "{0:N0}", termLoans[0]);
@@ -78,12 +83,12 @@ namespace Pushfi.Application.Customer.Handlers
             var highOffer = String.Format(CultureInfo.InvariantCulture, "{0:N0}", offers[1]);
             var offersString = "$" + lowOffer + " - " + "$" + highOffer;
 
-            var tier = PushfiCalculator.CalculateTier(creditScore);
+            var tier = PushfiCalculator.CalculateTier(creditScoreTUC);
 
             // Tier DECLINE
             if (tier.Count == 0)
             {
-                await this.CreditDeclineAsync(customer, broker, creditScore);
+                await this.CreditDeclineAsync(customer, broker, creditScoreTUC);
                 return new Unit();
             }
             var tierString = tier[0].ToString(CultureInfo.InvariantCulture) + "% - " + tier[1].ToString(CultureInfo.InvariantCulture) + "%";
@@ -97,6 +102,25 @@ namespace Pushfi.Application.Customer.Handlers
                 this._azureBlobStorageConfiguration.ContainerName +
                 AzureBlobStorageConstants.BrokerDefaultLogoImagePath;
 
+            var scoreFactorsEntity = new List<ScoreFactorEntity>();
+            var scoreFactors = "";
+            foreach (var score in creditReport.Root.TransriskScores.ScoreFactors.TUC)
+            {
+                var scoreFactorEntity = new ScoreFactorEntity();
+                scoreFactorEntity.Type = score.type;
+                scoreFactorEntity.Factor = score.factor;
+                scoreFactorsEntity.Add(scoreFactorEntity);
+
+                var scoreTypeColor = score.type == "Positive" ? "green" : "red";
+
+                var scoreStringBuilder = new StringBuilder(Strings.CreditOfferScoreFactor);
+                scoreStringBuilder.Replace("@@scoreTypeColor@@", scoreTypeColor)
+                    .Replace("@@scoreTypeName@@", score.type)
+                    .Replace("@@scoreFactor@@", score.factor);
+
+                scoreFactors += scoreStringBuilder.ToString();
+            }
+
             //var rootDirectory = Directory.GetParent(Environment.CurrentDirectory).FullName;
             //var path = rootDirectory + "/Pushfi.Domain/Resources/EmailTemplates/CreditOffer.html";
             //var htmlTemplate = File.ReadAllText(path);
@@ -109,7 +133,11 @@ namespace Pushfi.Application.Customer.Handlers
               .Replace("@@offers@@", offersString)
               .Replace("@@termLoans@@", termLoansString)
               .Replace("@@tier@@", tierString)
-              .Replace("@@backEndFee@@", backEndFeeString);
+              .Replace("@@backEndFee@@", backEndFeeString)
+              .Replace("@@creditScoreTRU@@", creditReport.Root.TransriskScores.ScoreValue.TUC)
+              .Replace("@@creditScoreEXP@@", creditReport.Root.TransriskScores.ScoreValue.EXP)
+              .Replace("@@creditScoreEQU@@", creditReport.Root.TransriskScores.ScoreValue.EQF)
+              .Replace("@@scoreFactors@@", scoreFactors);
 
             var htmlContent = sb.ToString();
             var subject = customer.FirstName + " " + customer.LastName + " " + emailTemplate.Subject;
@@ -142,7 +170,10 @@ namespace Pushfi.Application.Customer.Handlers
                 TierTo = tier[1],
                 BackEndFee = backEndFee,
                 TotalMonthlyPayments = totalMonthlyPayments,
-                CreditScore = creditScore,
+                CreditScoreTUC = creditScoreTUC,
+                CreditScoreEXP = creditScoreEXP,
+                CreditScoreEQF = creditScoreEQF,
+                ScoreFactors = scoreFactorsEntity,
                 Type = emailType
             };
 
@@ -191,7 +222,7 @@ namespace Pushfi.Application.Customer.Handlers
 
             var emailHistoryEntity = new CustomerEmailHistoryEntity()
             {
-                CreditScore = creditScore,
+                CreditScoreTUC = creditScore,
                 Type = emailType
             };
 

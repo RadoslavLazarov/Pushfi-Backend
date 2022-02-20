@@ -3,5 +3,6 @@
     public class TransriskScoresModel
     {
         public TransUnionCreditModel ScoreValue { get; set; }
-    }
+        public ScoreFactorsTransUnionCreditModel ScoreFactors { get; set; }
+}
 }

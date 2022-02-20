@@ -29,6 +29,7 @@
         #endregion
 
         #region Email
+        public const string CreditOfferScoreFactor = "<li style=\"margin-bottom: 20px;\"><div style=\"font-weight: 600; color: @@scoreTypeColor@@;\">@@scoreTypeName@@</div><div><b>Factor: </b>@@scoreFactor@@</div></li>";
         public const string BrokerRegistrationEmailSubject = "PushFi registration successful: {0}";
         public const string BrokerRegistrationEmailMessage = "Thank you for joining the PushFi team. This is your unique submission link - {0}/{1}/customer-apply";
         #endregion

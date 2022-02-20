@@ -15,6 +15,7 @@ using Pushfi.Application.Common.Constants;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Resources;
+using Pushfi.Application.Common.Models.Enfortra.Response.GetFullCreditReport.GetFullCreditReportJson;
 
 namespace Pushfi.Application.Customer.Handlers
 {
@@ -88,9 +89,10 @@ namespace Pushfi.Application.Customer.Handlers
             // Tier DECLINE
             if (tier.Count == 0)
             {
-                await this.CreditDeclineAsync(customer, broker, creditScoreTUC);
+                await this.CreditDeclineAsync(customer, broker, creditReport);
                 return new Unit();
             }
+
             var tierString = tier[0].ToString(CultureInfo.InvariantCulture) + "% - " + tier[1].ToString(CultureInfo.InvariantCulture) + "%";
 
             var backEndFee = broker.BackEndFee;
@@ -190,14 +192,38 @@ namespace Pushfi.Application.Customer.Handlers
             return new Unit();
         }
 
-        private async Task CreditDeclineAsync(CustomerModel customer, BrokerEntity broker, int creditScore)
+        private async Task CreditDeclineAsync(CustomerModel customer, BrokerEntity broker, GetFullCreditReportJsonModel creditReport)
         {
             var emailType = EmailTemplateType.CreditDecline;
             var emailTemplate = await _emailService.GetEmailTemplateAsync(emailType);
             var subject = broker.CompanyName + "- " + emailTemplate.Subject + " " + customer.FirstName + " " + customer.LastName;
 
+            var scoreFactorsEntity = new List<ScoreFactorEntity>();
+            var scoreFactors = "";
+            foreach (var score in creditReport.Root.TransriskScores.ScoreFactors.TUC)
+            {
+                var scoreFactorEntity = new ScoreFactorEntity();
+                scoreFactorEntity.Type = score.type;
+                scoreFactorEntity.Factor = score.factor;
+                scoreFactorsEntity.Add(scoreFactorEntity);
+
+                var scoreTypeColor = score.type == "Positive" ? "green" : "red";
+
+                var scoreStringBuilder = new StringBuilder(Strings.CreditOfferScoreFactor);
+                scoreStringBuilder.Replace("@@scoreTypeColor@@", scoreTypeColor)
+                    .Replace("@@scoreTypeName@@", score.type)
+                    .Replace("@@scoreFactor@@", score.factor);
+
+                scoreFactors += scoreStringBuilder.ToString();
+            }
+
+            var creditScoreTUC = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.TUC);
+            var creditScoreEXP = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.EXP);
+            var creditScoreEQF = Convert.ToInt32(creditReport.Root.TransriskScores.ScoreValue.EQF);
+
             var sb = new StringBuilder(emailTemplate.HtmlContent);
-            sb.Replace("@@creditScore@@", creditScore.ToString());
+            sb.Replace("@@creditScore@@", creditScoreTUC.ToString())
+              .Replace("@@scoreFactors@@", scoreFactors);
 
             var htmlContent = sb.ToString();
 
@@ -222,7 +248,10 @@ namespace Pushfi.Application.Customer.Handlers
 
             var emailHistoryEntity = new CustomerEmailHistoryEntity()
             {
-                CreditScoreTUC = creditScore,
+                CreditScoreTUC = creditScoreTUC,
+                CreditScoreEXP = creditScoreEXP,
+                CreditScoreEQF = creditScoreEQF,
+                ScoreFactors = scoreFactorsEntity,
                 Type = emailType
             };
 

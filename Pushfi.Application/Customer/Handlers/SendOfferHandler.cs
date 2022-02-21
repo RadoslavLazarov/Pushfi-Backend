@@ -145,7 +145,7 @@ namespace Pushfi.Application.Customer.Handlers
               .Replace("@@scoreFactors@@", scoreFactors);
 
             var htmlContent = sb.ToString();
-            var subject = broker.CompanyName + ": " + customer.FirstName + " " + customer.LastName + " " + emailTemplate.Subject;
+            var subject = broker.CompanyName + ": " + customer.FirstName + " " + customer.LastName + " - " + emailTemplate.Subject;
 
             var emailModel = new EmailModel()
             {

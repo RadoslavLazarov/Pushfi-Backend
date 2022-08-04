@@ -8,6 +8,7 @@
         #endregion
 
         #region Identity
+        public const string InvalidToken = "Invalid Token!";
         public const string UserDoesNotExsists = "User does not exsists!";
         public const string WrongUser = "Wrong user!";
         public const string EmailAlreadyExsists = "Email already exsists!";

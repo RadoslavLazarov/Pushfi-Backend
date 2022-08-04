@@ -16,6 +16,7 @@ namespace Pushfi.WebAPI.Controllers
 			return await Mediator.Send(command);
 		}
 
+		// TODO: change endpoint to CustomerLogin
 		[HttpPost]
 		[Route("{BrokerPath}/" + nameof(Login))]
 		public async Task<ActionResult<LoginResponseModel>> Login(LoginCommand command, [FromRoute] string brokerPath)
@@ -23,7 +24,6 @@ namespace Pushfi.WebAPI.Controllers
 			command.BrokerPath = brokerPath;
 			return await Mediator.Send(command);
 		}
-
 
 		[Authorize]
 		[HttpDelete]

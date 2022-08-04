@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Pushfi.Application.Broker.Commands;
 
 namespace Pushfi.WebAPI.Controllers

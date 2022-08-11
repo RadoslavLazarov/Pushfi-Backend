@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Pushfi.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Pushfi.Domain.Entities.Authentication
 {
 	public class ApplicationUser : IdentityUser<Guid>
 	{
-        public bool IsDeleted { get; set; } = false;
+		public ApplicationUser()
+        {
+			this.RefreshTokens = new List<RefreshTokenEntity>();
+        }
+
+		public bool IsDeleted { get; set; } = false;
+
+		[JsonIgnore]
+		public virtual IList<RefreshTokenEntity> RefreshTokens { get; set; }
 	}
 }

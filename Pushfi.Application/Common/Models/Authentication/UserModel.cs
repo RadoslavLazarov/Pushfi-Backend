@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pushfi.Application.Common.Models.Authentication
+﻿namespace Pushfi.Application.Common.Models.Authentication
 {
     public class UserModel
     {
-        public string Id { get; set; }
+        public UserModel()
+        {
+            this.RefreshTokens = new List<RefreshTokenModel>();
+        }
+
+        public Guid Id { get; set; }
+
         public string Email { get; set; }
-        public bool IsDeleted { get; set; }
+
+        public string Role { get; set; }
+
+        public virtual IList<RefreshTokenModel> RefreshTokens { get; set; }
     }
 }

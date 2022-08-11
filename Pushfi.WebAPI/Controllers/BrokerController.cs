@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pushfi.Application.Common.Models;
-using Pushfi.Application.Customer.Commands;
+using Pushfi.Application.Broker.Commands;
 
 namespace Pushfi.WebAPI.Controllers
 {

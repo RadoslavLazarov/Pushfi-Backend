@@ -6,25 +6,8 @@ using Pushfi.Application.Customer.Commands;
 
 namespace Pushfi.WebAPI.Controllers
 {
-	public class CustomerAuthenticationController : ApiControllerBase
+	public class CustomerController : ApiControllerBase
 	{
-		[HttpPost]
-		[Route("{BrokerPath}/" + nameof(Registration))]
-		public async Task<ActionResult<RegistrationResponseModel>> Registration(RegistrationCommand command, [FromRoute] string brokerPath)
-		{
-			command.BrokerPath = brokerPath;
-			return await Mediator.Send(command);
-		}
-
-		// TODO: change endpoint to CustomerLogin
-		[HttpPost]
-		[Route("{BrokerPath}/" + nameof(Login))]
-		public async Task<ActionResult<LoginResponseModel>> Login(LoginCommand command, [FromRoute] string brokerPath)
-		{
-			command.BrokerPath = brokerPath;
-			return await Mediator.Send(command);
-		}
-
 		[Authorize]
 		[HttpDelete]
 		[Route(nameof(Delete))]

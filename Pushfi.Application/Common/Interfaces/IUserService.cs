@@ -7,8 +7,16 @@ namespace Pushfi.Application.Common.Interfaces
 {
     public interface IUserService
     {
+        #region Authentication
+
+        UserModel GetById(string id);
+        Task<List<UserModel>> GetAllAsync();
+        ApplicationUser GetUserByRefreshToken(string token);
+
+        #endregion
+
         Task<UserModel> GetCurrentUserAsync();
-        public Guid GetCurrentUserId();
+        Guid GetCurrentUserId();
         Task UpdateUserAsync(ApplicationUser user);
         Task<CustomerModel> GetCurrentCustomerAsync();
         Task<CustomerEntity> GetCurrentCustomerEntityAsync();

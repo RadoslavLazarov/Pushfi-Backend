@@ -69,6 +69,8 @@ namespace Pushfi.Application.Mapping
 
             this.CreateMap<BrokerEntity, BrokerDataForCustomerFormModel>()
                 .ForPath(x => x.LogoImageUrl, y => y.MapFrom(src => src.LogoImage.Url));
+
+            this.CreateMap<RefreshTokenEntity, RefreshTokenModel>().ReverseMap();
         }
     }
 }

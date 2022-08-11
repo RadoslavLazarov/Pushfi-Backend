@@ -26,6 +26,7 @@
         #endregion
 
         #region Enfortra errors
+        public const string EnfortraError = "Enfortra error!";
         public const string EnfortraUserExsists = "User already exists in the Enfortra platform, try an alternate email address.";
         #endregion
 

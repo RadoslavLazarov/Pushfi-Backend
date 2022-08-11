@@ -28,7 +28,8 @@ namespace Pushfi.Infrastructure.Persistence
 
         public DbContext DbContext { get; }
 
-        public DbSet<CustomerEntity> Customer { get; set; }
+		public DbSet<RefreshTokenEntity> RefreshToken { get; set; }
+		public DbSet<CustomerEntity> Customer { get; set; }
 		public DbSet<BrokerEntity> Broker { get; set; }
 		public DbSet<EmailTemplateEntity> EmailTemplate { get; set; }
 		public DbSet<CustomerEmailHistoryEntity> CustomerEmailHistory { get; set; }

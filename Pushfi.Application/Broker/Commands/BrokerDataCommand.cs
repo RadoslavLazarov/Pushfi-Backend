@@ -1,8 +1,7 @@
-﻿
-using MediatR;
+﻿using MediatR;
 using Pushfi.Application.Common.Models;
 
-namespace Pushfi.Application.Customer.Commands
+namespace Pushfi.Application.Broker.Commands
 {
     public class BrokerDataCommand : IRequest<BrokerDataForCustomerFormModel>
     {

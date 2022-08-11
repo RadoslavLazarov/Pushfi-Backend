@@ -2,13 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models.Authentication;
+using Pushfi.Domain.Configuration;
 using Pushfi.Domain.Entities.Authentication;
 using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Entities.Customer;
 using Pushfi.Domain.Exceptions;
 using Pushfi.Domain.Resources;
+using System.Security;
 using System.Security.Claims;
 
 namespace Pushfi.Infrastructure.Services
@@ -19,6 +22,8 @@ namespace Pushfi.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationDbContext _context;
+        private readonly IJwtService _jwtService;
+        private readonly JwtConfiguration _jwtConfiguration;
         private readonly IEnfortraService _enfortraService;
 
         public UserService(
@@ -26,14 +31,66 @@ namespace Pushfi.Infrastructure.Services
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IApplicationDbContext context,
+            IJwtService jwtService,
+            IOptionsMonitor<JwtConfiguration> optionsMonitor,
             IEnfortraService enfortraService)
         {
             this._accessor = accessor;
             this._mapper = mapper;
             this._userManager = userManager;
             this._context = context;
+            this._jwtService = jwtService;
+            this._jwtConfiguration = optionsMonitor.CurrentValue;
             this._enfortraService = enfortraService;
         }
+
+        #region Authentication
+
+        public UserModel GetById(string id)
+        {
+            var user = this._userManager.Users
+                .Include(x => x.RefreshTokens)
+                .Where(x => x.Id.ToString() == id)
+                .FirstOrDefault();
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User not found");
+            }
+
+            return this._mapper.Map<UserModel>(user);
+        }
+
+        public async Task<List<UserModel>> GetAllAsync()
+        {
+            var usersModel = new List<UserModel>();
+
+            var users = this._userManager.Users.Include(x => x.RefreshTokens).ToList();
+            foreach (var user in users)
+            {
+                var userModel = this._mapper.Map<UserModel>(user);
+                userModel.Role = (await _userManager.GetRolesAsync(user))[0];
+                usersModel.Add(userModel);
+            }
+
+            return usersModel;
+        }
+
+        public ApplicationUser GetUserByRefreshToken(string token)
+        {
+            var user = this._userManager.Users
+                .Include(x => x.RefreshTokens)
+                .SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+
+            if (user == null)
+            {
+                throw new SecurityException("Invalid token");
+            }
+
+            return user;
+        }
+
+        #endregion
 
         public async Task<UserModel> GetCurrentUserAsync()
         {

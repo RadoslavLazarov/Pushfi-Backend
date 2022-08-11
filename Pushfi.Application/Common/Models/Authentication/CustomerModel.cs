@@ -180,7 +180,6 @@ namespace Pushfi.Application.Common.Models.Authentication
 
 		[MaxLength(50)]
 		public string BusinessLocationLeaseMortgage { get; set; }
-		public double? BusinessLocationMonthlyPayment { get; set; }
 
 		[MaxLength(20)]
 		public string NumberOfEmployees { get; set; }

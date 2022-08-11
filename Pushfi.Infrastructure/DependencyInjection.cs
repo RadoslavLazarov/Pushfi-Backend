@@ -21,10 +21,12 @@ namespace Pushfi.Infrastructure
 
             //services.AddScoped<IDomainEventService, DomainEventService>();
 
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEnfortraService, EnfortraService>();
             services.AddTransient<ISoapService, SoapService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IJwtService, JwtService>();
 
             return services;
         }

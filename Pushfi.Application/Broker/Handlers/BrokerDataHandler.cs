@@ -4,12 +4,12 @@ using Microsoft.Extensions.Options;
 using Pushfi.Application.Common.Constants;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models;
-using Pushfi.Application.Customer.Commands;
+using Pushfi.Application.Broker.Commands;
 using Pushfi.Domain.Configuration;
 using Pushfi.Domain.Entities;
 using Pushfi.Domain.Exceptions;
 
-namespace Pushfi.Application.Customer.Handlers
+namespace Pushfi.Application.Broker.Handlers
 {
     public class BrokerDataHandler : IRequestHandler<BrokerDataCommand, BrokerDataForCustomerFormModel>
     {

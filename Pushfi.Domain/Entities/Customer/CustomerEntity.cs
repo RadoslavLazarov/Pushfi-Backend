@@ -182,8 +182,6 @@ namespace Pushfi.Domain.Entities.Customer
 		[MaxLength(50)]
 		public string BusinessLocationLeaseMortgage { get; set; }
 
-		public double? BusinessLocationMonthlyPayment { get; set; }
-
 		[MaxLength(20)]
 		public string NumberOfEmployees { get; set; }
 

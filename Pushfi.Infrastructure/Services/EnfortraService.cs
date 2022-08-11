@@ -8,6 +8,7 @@ using Pushfi.Application.Common.Models.Enfortra.Response.GetFullCreditReport;
 using Pushfi.Application.Common.Models.Enfortra.Response.GetFullCreditReport.GetFullCreditReportJson;
 using Pushfi.Domain.Configuration;
 using Pushfi.Domain.Exceptions;
+using Pushfi.Domain.Resources;
 using Pushfi.Infrastructure.Enums;
 using System.Text;
 
@@ -77,6 +78,11 @@ namespace Pushfi.Infrastructure.Services
 		{
 			var response = await EnfortraRequestAsync
 				<GetCreditReportDetailsResponse>(EnfortraRequestType.GetCreditReportDetails, email);
+
+			if (response == null)
+            {
+				throw new BusinessException(Strings.EnfortraError);
+			}
 
 			if (!string.IsNullOrEmpty(response.ErrMsg))
 			{

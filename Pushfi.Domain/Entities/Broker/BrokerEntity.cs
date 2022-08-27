@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pushfi.Common.Constants.User;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Entities.Customer;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,11 @@ namespace Pushfi.Domain.Entities.Broker
 {
     public class BrokerEntity : EntityBase
     {
+        public BrokerEntity()
+        {
+            this.Customers = new List<CustomerEntity>();
+        }
+
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; }
         public Guid UserId { get; set; }
@@ -30,6 +36,10 @@ namespace Pushfi.Domain.Entities.Broker
         [Required]
         [MaxLength(UserEntityConstants.NameMaxLength)]
         public string LastName { get; set; }
+
+
+        [NotMapped]
+        public virtual string FullName => FirstName + " " + LastName;
 
         [Required]
         [MaxLength(UserEntityConstants.NameMaxLength)]
@@ -66,5 +76,7 @@ namespace Pushfi.Domain.Entities.Broker
 
         [Required]
         public double BackEndFee { get; set; }
+
+        public virtual IList<CustomerEntity> Customers { get; set; }
     }
 }

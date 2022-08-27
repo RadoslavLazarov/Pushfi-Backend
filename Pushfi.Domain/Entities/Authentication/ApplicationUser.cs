@@ -8,11 +8,12 @@ namespace Pushfi.Domain.Entities.Authentication
 		public ApplicationUser()
         {
 			this.RefreshTokens = new List<RefreshTokenEntity>();
-        }
+		}
 
 		public bool IsDeleted { get; set; } = false;
 
-		[JsonIgnore]
+		public string AvatarColor { get; set; }
+
 		public virtual IList<RefreshTokenEntity> RefreshTokens { get; set; }
 	}
 }

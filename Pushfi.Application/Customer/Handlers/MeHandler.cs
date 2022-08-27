@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Application.Customer.Commands;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Enums;
 using Pushfi.Domain.Exceptions;
 using Pushfi.Domain.Resources;
 using System;
@@ -19,16 +21,16 @@ namespace Pushfi.Application.Customer.Handlers
     {
         private IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IUserService _userService;
 
         public MeHandler(
             IHttpContextAccessor httpContextAccessor,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            IUserService userService)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._userManager = userManager;
-            this._roleManager = roleManager;
+            this._userService = userService;
         }
 
         public async Task<MeResponseModel> Handle(MeCommand request, CancellationToken cancellationToken)
@@ -45,13 +47,16 @@ namespace Pushfi.Application.Customer.Handlers
                 throw new BusinessException(string.Format(Strings.InvalidToken));
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var role = await _userService.GetUserRoleTypeAsync(user);
+            var fullName = await _userService.GetUserFullNameAsync(user);
 
             return new MeResponseModel()
             {
                 Id = userId,
                 Email = user.Email,
-                Role = userRoles[0]
+                RoleType = role,
+                FullName = fullName,
+                AvatarColor = user.AvatarColor
             };
         }
     }

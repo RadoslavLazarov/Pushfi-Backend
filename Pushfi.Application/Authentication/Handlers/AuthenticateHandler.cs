@@ -9,6 +9,7 @@ using Pushfi.Application.Customer.Commands;
 using Pushfi.Application.Helpers;
 using Pushfi.Domain.Configuration;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Enums;
 using Pushfi.Domain.Exceptions;
 using Pushfi.Domain.Resources;
 using System.IdentityModel.Tokens.Jwt;
@@ -26,6 +27,7 @@ namespace Pushfi.Application.Authentication.Handlers
         private readonly IJwtService _jwtService;
         private readonly JwtConfiguration _jwtConfiguration;
         private readonly IEnfortraService _enfortraService;
+        private readonly IUserService _userService;
 
         public AuthenticateHandler(
             IApplicationDbContext context,
@@ -34,7 +36,8 @@ namespace Pushfi.Application.Authentication.Handlers
             IAuthenticationService authenticationService,
             IJwtService jwtService,
             IOptionsMonitor<JwtConfiguration> optionsMonitor,
-            IEnfortraService enfortraService)
+            IEnfortraService enfortraService,
+            IUserService userService)
         {
             this._context = context;
             this._userManager = userManager;
@@ -43,6 +46,7 @@ namespace Pushfi.Application.Authentication.Handlers
             this._jwtService = jwtService;
             this._jwtConfiguration = optionsMonitor.CurrentValue;
             this._enfortraService = enfortraService;
+            this._userService = userService;
         }
 
         public async Task<AuthenticateResponseModel> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
@@ -58,7 +62,7 @@ namespace Pushfi.Application.Authentication.Handlers
                 throw new BusinessException(Strings.WrongPassword);
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var role = await _userService.GetUserRoleTypeAsync(user);
 
             // authentication successful so generate jwt and refresh tokens
             var jwtToken = await this._jwtService.GenerateJwtToken(user);
@@ -70,8 +74,9 @@ namespace Pushfi.Application.Authentication.Handlers
 
             // save changes to db
             await this._userManager.UpdateAsync(user);
+            var fullName = await _userService.GetUserFullNameAsync(user);
 
-            return new AuthenticateResponseModel(user, userRoles[0], jwtToken, refreshToken.Token);
+            return new AuthenticateResponseModel(user, role, jwtToken, refreshToken.Token, fullName);
         }
     }
 }

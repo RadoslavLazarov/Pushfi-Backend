@@ -13,6 +13,8 @@
 
         public string Role { get; set; }
 
+        public string AvatarColor { get; set; }
+
         public virtual IList<RefreshTokenModel> RefreshTokens { get; set; }
     }
 }

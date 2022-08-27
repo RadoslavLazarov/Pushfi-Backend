@@ -15,6 +15,7 @@
         public const string WrongPassword = "Wrong password!";
         public const string UserAccountDeleted = "User account is deleted!";
         public const string UserDeletionFailed = "User deletion failed!";
+        public const string DefaultAdminCreationFailed = "Default User Admin creation failed!";
         #endregion
 
         #region Other

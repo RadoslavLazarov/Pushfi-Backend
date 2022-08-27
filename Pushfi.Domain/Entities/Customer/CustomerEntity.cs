@@ -1,5 +1,6 @@
 ﻿using Pushfi.Common.Constants.User;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,7 +15,9 @@ namespace Pushfi.Domain.Entities.Customer
 
 		public DateTimeOffset CreatedAt { get; set; }
 
-		public Guid BrokerId { get; set; }
+        [ForeignKey(nameof(BrokerId))]
+        public virtual BrokerEntity Broker { get; set; }
+        public Guid BrokerId { get; set; }
 
         public ProcessStatus ProcessStatus { get; set; }
 
@@ -35,6 +38,9 @@ namespace Pushfi.Domain.Entities.Customer
 		[Required]
 		[MaxLength(UserEntityConstants.NameMaxLength)]
 		public string LastName { get; set; }
+
+		[NotMapped]
+		public virtual string FullName => FirstName + " " + LastName;
 
 		[Required]
 		[MaxLength(UserEntityConstants.PhoneNumberMaxLenght)]

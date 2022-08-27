@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pushfi.Infrastructure.Persistence;
 
@@ -11,9 +12,10 @@ using Pushfi.Infrastructure.Persistence;
 namespace Pushfi.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220825185324_Add_AvatarColor_In_ApplicationUser")]
+    partial class Add_AvatarColor_In_ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,7 +266,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshToken", (string)null);
+                    b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Broker.BrokerEntity", b =>
@@ -353,7 +355,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Broker", (string)null);
+                    b.ToTable("Broker");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Customer.CustomerEntity", b =>
@@ -580,7 +582,7 @@ namespace Pushfi.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Email.CustomerEmailHistoryEntity", b =>
@@ -652,7 +654,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomerEmailHistory", (string)null);
+                    b.ToTable("CustomerEmailHistory");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Email.EmailTemplateEntity", b =>
@@ -680,7 +682,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailTemplate", (string)null);
+                    b.ToTable("EmailTemplate");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

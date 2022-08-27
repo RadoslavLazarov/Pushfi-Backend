@@ -6,6 +6,7 @@ using Pushfi.Application.Broker.Commands;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models;
 using Pushfi.AzureBlobStorage.Interfaces;
+using Pushfi.Common.Constants.User;
 using Pushfi.Domain.Common.Constants;
 using Pushfi.Domain.Configuration;
 using Pushfi.Domain.Entities.Authentication;
@@ -61,6 +62,7 @@ namespace Pushfi.Application.Broker.Handlers
             var user = this._mapper.Map<ApplicationUser>(request);
 
             user.SecurityStamp = Guid.NewGuid().ToString();
+            user.AvatarColor = new UserEntityConstants().GenerateRandomAvatarColor();
 
             // Create user
             var userResult = await this._userManager.CreateAsync(user, request.Password);

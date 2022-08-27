@@ -4,6 +4,7 @@ using Pushfi.Application.Authentication.Commands;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Domain.Entities.Authentication;
+using Pushfi.Domain.Enums;
 using System.Security;
 
 namespace Pushfi.Application.Authentication.Handlers
@@ -13,15 +14,18 @@ namespace Pushfi.Application.Authentication.Handlers
         private readonly UserManager<ApplicationUser> _userManager;
         private IAuthenticationService _authenticationService;
         private readonly IJwtService _jwtService;
+        private readonly IUserService _userService;
 
         public RefreshTokenHandler(
             UserManager<ApplicationUser> userManager,
             IAuthenticationService authenticationService,
-            IJwtService jwtService)
+            IJwtService jwtService,
+            IUserService userService)
         {
             this._userManager = userManager;
             this._authenticationService = authenticationService;
             this._jwtService = jwtService;
+            this._userService = userService;
         }
 
         public async Task<AuthenticateResponseModel> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -53,10 +57,10 @@ namespace Pushfi.Application.Authentication.Handlers
 
             // generate new jwt
             var jwtToken = await this._jwtService.GenerateJwtToken(user);
+            var role = await _userService.GetUserRoleTypeAsync(user);
+            var fullName = await _userService.GetUserFullNameAsync(user);
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            return new AuthenticateResponseModel(user, userRoles[0], jwtToken, newRefreshToken.Token);
+            return new AuthenticateResponseModel(user, role, jwtToken, newRefreshToken.Token, fullName);
         }
     }
 }

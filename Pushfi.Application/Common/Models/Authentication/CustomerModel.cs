@@ -13,6 +13,10 @@ namespace Pushfi.Application.Common.Models.Authentication
 
 		public Guid BrokerId { get; set; }
 
+		public string BrokerCompanyName { get; set; }
+
+		public DateTimeOffset CreatedAt { get; set; }
+
 		[Required]
 		[MaxLength(100)]
 		public string Email { get; set; }
@@ -22,9 +26,13 @@ namespace Pushfi.Application.Common.Models.Authentication
 		public string Password { get; set; }
 
 		public bool IsDeleted { get; set; }
-        #endregion
 
-        public ProcessStatus ProcessStatus { get; set; }
+		public string AvatarColor { get; set; }
+		#endregion
+
+		public ProcessStatus ProcessStatus { get; set; }
+
+		public string FullName => FirstName + " " + LastName;
 
 		#region Customer private data
 		public long EnfortraUserID { get; set; }

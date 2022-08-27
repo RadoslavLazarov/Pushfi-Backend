@@ -8,6 +8,7 @@ using Pushfi.Application.Common.Models;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Application.Common.Models.Enfortra;
 using Pushfi.Application.Customer.Commands;
+using Pushfi.Common.Constants.User;
 using Pushfi.Domain.Configuration;
 using Pushfi.Domain.Entities.Authentication;
 using Pushfi.Domain.Entities.Customer;
@@ -57,6 +58,7 @@ namespace Pushfi.Application.Customer.Handlers
             var user = this._mapper.Map<ApplicationUser>(request);
 
             user.SecurityStamp = Guid.NewGuid().ToString();
+            user.AvatarColor = new UserEntityConstants().GenerateRandomAvatarColor();
 
             long EnfortraUserID = 0;
             // Check if user exsists in Enfortra

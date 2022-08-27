@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pushfi.Infrastructure.Persistence;
 
@@ -11,9 +12,10 @@ using Pushfi.Infrastructure.Persistence;
 namespace Pushfi.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220822200109_Add_Customers_Relation_In_Broker")]
+    partial class Add_Customers_Relation_In_Broker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,9 +164,6 @@ namespace Pushfi.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("AvatarColor")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -264,7 +263,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshToken", (string)null);
+                    b.ToTable("RefreshToken");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Broker.BrokerEntity", b =>
@@ -353,7 +352,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Broker", (string)null);
+                    b.ToTable("Broker");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Customer.CustomerEntity", b =>
@@ -580,7 +579,7 @@ namespace Pushfi.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Email.CustomerEmailHistoryEntity", b =>
@@ -652,7 +651,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomerEmailHistory", (string)null);
+                    b.ToTable("CustomerEmailHistory");
                 });
 
             modelBuilder.Entity("Pushfi.Domain.Entities.Email.EmailTemplateEntity", b =>
@@ -680,7 +679,7 @@ namespace Pushfi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailTemplate", (string)null);
+                    b.ToTable("EmailTemplate");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

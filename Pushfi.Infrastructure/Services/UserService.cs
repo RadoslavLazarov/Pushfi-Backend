@@ -9,6 +9,7 @@ using Pushfi.Domain.Configuration;
 using Pushfi.Domain.Entities.Authentication;
 using Pushfi.Domain.Entities.Broker;
 using Pushfi.Domain.Entities.Customer;
+using Pushfi.Domain.Enums;
 using Pushfi.Domain.Exceptions;
 using Pushfi.Domain.Resources;
 using System.Security;
@@ -198,6 +199,54 @@ namespace Pushfi.Infrastructure.Services
             }
 
             return broker;
+        }
+
+        public async Task<RoleType> GetUserRoleTypeAsync(ApplicationUser user)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            RoleType role;
+
+            switch (userRoles[0])
+            {
+                case "Admin":
+                    role = RoleType.Admin;
+                    break;
+                case "Broker":
+                    role = RoleType.Broker;
+                    break;
+                case "Customer":
+                    role = RoleType.Customer;
+                    break;
+                default:
+                    role = RoleType.Customer;
+                    break;
+            }
+
+            return role;
+        }
+
+        public async Task<string> GetUserFullNameAsync(ApplicationUser user)
+        {
+            var fullName = "";
+            var role = await this.GetUserRoleTypeAsync(user);
+
+            switch (role)
+            {
+                case RoleType.Broker:
+                    var broker = await this._context.Broker
+                            .Where(x => x.UserId == user.Id)
+                            .FirstOrDefaultAsync();
+                    fullName = broker.FullName;
+                    break;
+                case RoleType.Customer:
+                    var customer = await this._context.Customer
+                            .Where(x => x.UserId == user.Id)
+                            .FirstOrDefaultAsync();
+                    fullName = customer.FullName;
+                    break;
+            }
+
+            return fullName;
         }
     }
 }

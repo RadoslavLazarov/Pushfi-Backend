@@ -4,6 +4,6 @@
     {
         Customer = 0,
         Broker = 1,
-        Admin = 2,
+        Admin = 2
     }
 }

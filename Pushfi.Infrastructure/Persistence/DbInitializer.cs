@@ -80,6 +80,37 @@ namespace Pushfi.Infrastructure.Persistence
 			}
 
 			#endregion
-		}
-	}
+
+			#region Customer
+
+			var customers = dbContext.Customer.Where(x => x.ProcessStatus == ProcessStatus.GetOffer).Include(x => x.User).ToList();
+
+			foreach (var customer in customers)
+			{
+				var offers = dbContext.CustomerEmailHistory.Where(x => x.CreatedById == customer.UserId).ToList();
+				var latestOffer = offers.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+				
+				if (latestOffer != null)
+                {
+					switch (latestOffer.Type)
+					{
+						case EmailTemplateType.CreditApproved:
+							customer.ProcessStatus = ProcessStatus.CreditApproved;
+							break;
+						case EmailTemplateType.CreditFreeze:
+							customer.ProcessStatus = ProcessStatus.CreditFreeze;
+							break;
+						case EmailTemplateType.CreditDecline:
+							customer.ProcessStatus = ProcessStatus.CreditDecline;
+							break;
+					}
+
+					dbContext.Update(customer);
+					dbContext.SaveChanges();
+				}			
+			}
+
+            #endregion
+        }
+    }
 }

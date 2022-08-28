@@ -187,7 +187,7 @@ namespace Pushfi.Application.Customer.Handlers
             if (customer.ProcessStatus != ProcessStatus.GetOffer)
             {
                 var customerEntity = await this._userService.GetCurrentCustomerEntityAsync();
-                customerEntity.ProcessStatus = ProcessStatus.GetOffer;
+                customerEntity.ProcessStatus = ProcessStatus.CreditApproved;
                 await this._userService.UpdateCustomerAsync(customerEntity);
             }
 
@@ -256,6 +256,11 @@ namespace Pushfi.Application.Customer.Handlers
             };
 
             this._context.CustomerEmailHistory.Add(emailHistoryEntity);
+
+            var customerEntity = await this._userService.GetCurrentCustomerEntityAsync();
+            customerEntity.ProcessStatus = ProcessStatus.CreditDecline;
+            this._context.DbContext.Update(customerEntity);
+
             this._context.SaveChanges();
         }
 
@@ -289,6 +294,11 @@ namespace Pushfi.Application.Customer.Handlers
             };
 
             this._context.CustomerEmailHistory.Add(emailHistoryEntity);
+
+            var customerEntity = await this._userService.GetCurrentCustomerEntityAsync();
+            customerEntity.ProcessStatus = ProcessStatus.CreditFreeze;
+            this._context.DbContext.Update(customerEntity);
+
             this._context.SaveChanges();
         }
     }

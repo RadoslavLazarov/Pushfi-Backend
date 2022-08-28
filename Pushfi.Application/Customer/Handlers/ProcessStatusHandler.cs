@@ -67,9 +67,9 @@ namespace Pushfi.Application.Customer.Handlers
                 model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.User.Email)).CreditReportUrl;
             }
 
-            if (customer.ProcessStatus == ProcessStatus.GetOffer)
+            if (customer.ProcessStatus >= ProcessStatus.GetOffer)
             {
-                model.ProcessStatus = ProcessStatus.GetOffer;
+                model.ProcessStatus = customer.ProcessStatus;
                 model.CreditReportUrl = (await this._enfortraService.GetCreditReportDetailsAsync(customer.User.Email)).CreditReportUrl;
             }
 

@@ -33,7 +33,7 @@ namespace Pushfi.Application.Customer.Handlers
             var currentUserId = this._userService.GetCurrentUserId();
             var broker = this._context.Broker
                 .Where(x => x.UserId == currentUserId)
-                .Include(x => x.Customers).ThenInclude(x => x.User)
+                //.Include(x => x.Customers).ThenInclude(x => x.User)
                 .FirstOrDefault();
 
             if (broker == null)
@@ -43,10 +43,10 @@ namespace Pushfi.Application.Customer.Handlers
            
             var result = new List<CustomerModel>();
 
-            foreach (var customer in broker.Customers)
-            {
-                result.Add(_mapper.Map<CustomerModel>(customer));
-            }
+            //foreach (var customer in broker.Customers)
+            //{
+            //    result.Add(_mapper.Map<CustomerModel>(customer));
+            //}
 
             return result;
         }

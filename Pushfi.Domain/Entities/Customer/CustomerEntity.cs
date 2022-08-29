@@ -15,8 +15,8 @@ namespace Pushfi.Domain.Entities.Customer
 
 		public DateTimeOffset CreatedAt { get; set; }
 
-        [ForeignKey(nameof(BrokerId))]
-        public virtual BrokerEntity Broker { get; set; }
+        //[ForeignKey(nameof(BrokerId))]
+        //public virtual BrokerEntity Broker { get; set; }
         public Guid BrokerId { get; set; }
 
         public ProcessStatus ProcessStatus { get; set; }

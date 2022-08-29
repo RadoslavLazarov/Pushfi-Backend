@@ -9,10 +9,10 @@ namespace Pushfi.Domain.Entities.Broker
 {
     public class BrokerEntity : EntityBase
     {
-        public BrokerEntity()
-        {
-            this.Customers = new List<CustomerEntity>();
-        }
+        //public BrokerEntity()
+        //{
+        //    this.Customers = new List<CustomerEntity>();
+        //}
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; }
@@ -77,6 +77,6 @@ namespace Pushfi.Domain.Entities.Broker
         [Required]
         public double BackEndFee { get; set; }
 
-        public virtual IList<CustomerEntity> Customers { get; set; }
+        // public virtual IList<CustomerEntity> Customers { get; set; }
     }
 }

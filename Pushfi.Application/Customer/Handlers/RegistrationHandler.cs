@@ -96,8 +96,8 @@ namespace Pushfi.Application.Customer.Handlers
             customer.ProcessStatus = ProcessStatus.Registration;
             customer.CreatedAt = DateTimeOffset.Now;
 
-            await this._context.Customer.AddAsync(customer);
-            await this._context.SaveChangesAsync(cancellationToken);
+            this._context.Customer.Add(customer);
+            this._context.SaveChanges();
 
             var authClaims = new List<Claim>
                 {

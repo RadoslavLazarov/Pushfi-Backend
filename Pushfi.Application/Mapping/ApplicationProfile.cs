@@ -34,7 +34,7 @@ namespace Pushfi.Application.Mapping
                 .ForMember(x => x.Email, y => y.MapFrom(src => src.User.Email))
                 .ForMember(x => x.IsDeleted, y => y.MapFrom(src => src.User.IsDeleted))
                 .ForMember(x => x.AvatarColor, y => y.MapFrom(src => src.User.AvatarColor))
-                .ForMember(x => x.BrokerCompanyName, y => y.MapFrom(src => src.Broker.CompanyName))
+                //.ForMember(x => x.BrokerCompanyName, y => y.MapFrom(src => src.Broker.CompanyName))
                 .ReverseMap();
 
             this.CreateMap<RegistrationCommand, CreateNewUserEnrollmentModel>()

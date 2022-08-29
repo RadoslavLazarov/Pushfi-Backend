@@ -11,7 +11,7 @@ namespace Pushfi.Infrastructure.Persistence.EntityConfigurations
 		{
 			builder.Property(x => x.LoanProducts).HasJsonConversion();
 			builder.HasOne(p => p.User).WithOne().OnDelete(DeleteBehavior.Cascade);
-			builder.HasOne(p => p.Broker).WithMany(x => x.Customers).OnDelete(DeleteBehavior.NoAction);
+			//builder.HasOne(p => p.Broker).WithMany(x => x.Customers).OnDelete(DeleteBehavior.NoAction);
         }
 	}
 }

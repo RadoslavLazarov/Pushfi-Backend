@@ -24,7 +24,7 @@ namespace Pushfi.Application.Customer.Handlers
         {
             var customers = this._context.Customer
                 .Include(x => x.User)
-                .Include(x => x.Broker)
+                //.Include(x => x.Broker)
                 .ToList();
 
             var result = new List<CustomerModel>();

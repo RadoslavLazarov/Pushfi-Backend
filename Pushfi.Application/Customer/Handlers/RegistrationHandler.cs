@@ -88,9 +88,8 @@ namespace Pushfi.Application.Customer.Handlers
             // Create customer
             var customer = this._mapper.Map<CustomerEntity>(request);
             customer.UserId = newUser.Id;
-            customer.BrokerId = this._context.Broker
+            customer.Broker = this._context.Broker
                 .Where(x => x.UrlPath == request.BrokerPath)
-                .Select(x => x.Id)
                 .FirstOrDefault();
             customer.EnfortraUserID = EnfortraUserID;
             customer.ProcessStatus = ProcessStatus.Registration;

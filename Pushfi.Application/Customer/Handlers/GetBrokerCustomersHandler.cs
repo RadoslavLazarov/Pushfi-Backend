@@ -5,11 +5,12 @@ using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models.Authentication;
 using Pushfi.Application.Customer.Commands;
 using Pushfi.Domain.Enums;
+using Pushfi.Domain.Models;
 using System.Security;
 
 namespace Pushfi.Application.Customer.Handlers
 {
-    public class GetBrokerCustomersHandler : IRequestHandler<GetBrokerCustomersCommand, List<CustomerModel>>
+    public class GetBrokerCustomersHandler : IRequestHandler<GetBrokerCustomersCommand, PageResult<CustomerModel>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -28,7 +29,7 @@ namespace Pushfi.Application.Customer.Handlers
             this._enfortraService = enfortraService;
         }
 
-        public async Task<List<CustomerModel>> Handle(GetBrokerCustomersCommand request, CancellationToken cancellationToken)
+        public async Task<PageResult<CustomerModel>> Handle(GetBrokerCustomersCommand request, CancellationToken cancellationToken)
         {
             var currentUserId = this._userService.GetCurrentUserId();
             var broker = this._context.Broker
@@ -40,15 +41,16 @@ namespace Pushfi.Application.Customer.Handlers
             {
                 throw new SecurityException();
             }
-           
-            var result = new List<CustomerModel>();
+
+            var pageResult = new PageResult<CustomerModel>();
+            pageResult.TotalCount = broker.Customers.Count;
 
             foreach (var customer in broker.Customers)
             {
-                result.Add(_mapper.Map<CustomerModel>(customer));
-            }
+                pageResult.Items.Add(_mapper.Map<CustomerModel>(customer));
+            }    
 
-            return result;
+            return pageResult;
         }
     }
 }

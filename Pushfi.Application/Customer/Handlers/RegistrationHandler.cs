@@ -72,6 +72,8 @@ namespace Pushfi.Application.Customer.Handlers
                 {
                     throw new BusinessException(ex.Message);
                 }
+
+                throw new BusinessException();
             }
 
             // Create user

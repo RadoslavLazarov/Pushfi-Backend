@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Pushfi.Application.Common.Interfaces;
 using Pushfi.Application.Common.Models.Authentication;
@@ -19,6 +21,7 @@ namespace Pushfi.Infrastructure.Services
 {
     public class UserService : IUserService
     {
+        private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -28,6 +31,7 @@ namespace Pushfi.Infrastructure.Services
         private readonly IEnfortraService _enfortraService;
 
         public UserService(
+            IWebHostEnvironment env,
             IHttpContextAccessor accessor,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
@@ -36,6 +40,7 @@ namespace Pushfi.Infrastructure.Services
             IOptionsMonitor<JwtConfiguration> optionsMonitor,
             IEnfortraService enfortraService)
         {
+            this._env = env;
             this._accessor = accessor;
             this._mapper = mapper;
             this._userManager = userManager;
@@ -182,6 +187,28 @@ namespace Pushfi.Infrastructure.Services
 
             var emails = this._context.CustomerEmailHistory.Where(x => x.CreatedById == userId).ToList();
             this._context.CustomerEmailHistory.RemoveRange(emails);
+            this._context.SaveChanges();
+        }
+
+        public async Task DeleteCustomerByUserIdAsync(Guid userId)
+        {
+            var customer = await this._context.Customer
+                .Where(c => c.UserId == userId)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync();
+
+            if (customer == null)
+            {
+                throw new Exception(Strings.UserDoesNotExsists);
+            }
+
+            if (!this._env.IsDevelopment())
+            {
+                await this._enfortraService.CancelEnrollmentAsync(customer.User.Email);
+            }
+            var emails = this._context.CustomerEmailHistory.Where(x => x.CreatedById == userId).ToList();
+            this._context.CustomerEmailHistory.RemoveRange(emails);
+            this._context.Customer.Remove(customer);
             this._context.SaveChanges();
         }
 

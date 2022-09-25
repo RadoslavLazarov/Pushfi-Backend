@@ -32,6 +32,8 @@ namespace Pushfi.Application.Common.Interfaces
 
         Task DeleteCurrentCustomerAsync();
 
+        Task DeleteCustomerByUserIdAsync(Guid userId);
+
         Task<BrokerEntity> GetCurrentBrokerEntityAsync();
 
         Task<RoleType> GetUserRoleTypeAsync(ApplicationUser user);

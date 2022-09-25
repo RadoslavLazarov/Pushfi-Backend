@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Pushfi.Application.Common.Interfaces;
+using Pushfi.Application.Common.Models;
 using Pushfi.Application.Customer.Commands;
 
 namespace Pushfi.Application.Customer.Handlers
 {
-    public class DeleteHandler : IRequestHandler<DeleteCommand>
+    public class DeleteHandler : IRequestHandler<DeleteCommand, ResponseModel>
     {
         private readonly IUserService _userService;
         private readonly IEnfortraService _enfortraService;
@@ -17,11 +18,21 @@ namespace Pushfi.Application.Customer.Handlers
             this._enfortraService = enfortraService;
         }
 
-        public async Task<Unit> Handle(DeleteCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseModel> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
-            await this._userService.DeleteCurrentCustomerAsync();
+            var model = new ResponseModel();
 
-            return new Unit();
+            try
+            {
+                await this._userService.DeleteCustomerByUserIdAsync(request.UserId);
+                model.Success = true;
+            }
+            catch
+            {
+                model.Success = false;
+            }
+
+            return model;
         }
     }
 }

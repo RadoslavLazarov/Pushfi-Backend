@@ -77,6 +77,9 @@ namespace Pushfi.Domain.Entities.Broker
         [Required]
         public double BackEndFee { get; set; }
 
+        [MaxLength(1000)]
+        public string ExternalUrl { get; set; }
+
         public virtual IList<CustomerEntity> Customers { get; set; }
     }
 }
